@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  activemq:
+    image: apache/activemq-classic
+    container_name: activemq-classic
+    ports:
+      - "8161:8161" # Web Console
+      - "61613:61613" # STOMP
+
+  # for development: starts fast, stops faster
+  activemq-dev:
+    stop_grace_period: 100ms
+    image: apache/activemq-classic
+    container_name: activemq-classic
+    ports:
+      - "8161:8161" # Web Console
+      - "61613:61613" # STOMP
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8161"]
+      interval: 100ms
+      timeout: 20s
+      retries: 100
+      start_period: 100ms
+
