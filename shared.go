@@ -11,7 +11,7 @@ func Specification() sdk.Specification {
 	return sdk.Specification{
 		Name:        "activemq",
 		Summary:     "An ActiveMQ classic source and destination plugin for Conduit, written in Go.",
-		Description: "A ActiveMQ classic source and destination plugin for Conduit, written in Go.",
+		Description: "An ActiveMQ classic source and destination plugin for Conduit, written in Go.",
 		Version:     version,
 		Author:      "Meroxa, Inc.",
 	}
