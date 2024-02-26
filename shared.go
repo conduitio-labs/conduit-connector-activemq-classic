@@ -23,3 +23,15 @@ var Connector = sdk.Connector{
 	NewSource:        NewSource,
 	NewDestination:   NewDestination,
 }
+
+//go:generate paramgen -output=paramgen_src.go SourceConfig
+//go:generate paramgen -output=paramgen_dest.go DestinationConfig
+
+type Config struct {
+}
+
+type SourceConfig struct {
+}
+
+type DestinationConfig struct {
+}
