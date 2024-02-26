@@ -5,6 +5,7 @@ go 1.22.0
 require (
 	github.com/conduitio/conduit-connector-sdk v0.8.0
 	github.com/go-stomp/stomp v2.1.4+incompatible
+	github.com/matryer/is v1.4.1
 )
 
 require (
@@ -22,7 +23,6 @@ require (
 	github.com/huandu/xstrings v1.3.3 // indirect
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
-	github.com/matryer/is v1.4.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/copystructure v1.0.0 // indirect

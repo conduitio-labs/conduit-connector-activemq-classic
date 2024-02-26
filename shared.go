@@ -1,6 +1,12 @@
 package activemq
 
-import sdk "github.com/conduitio/conduit-connector-sdk"
+import (
+	"encoding/json"
+
+	sdk "github.com/conduitio/conduit-connector-sdk"
+	"github.com/go-stomp/stomp"
+	"github.com/go-stomp/stomp/frame"
+)
 
 // version is set during the build process with ldflags (see Makefile).
 // Default version matches default from runtime/debug.
@@ -39,5 +45,43 @@ type SourceConfig struct {
 
 type DestinationConfig struct {
 	Config
-	Queue string `json:"queue" validate:"required"`
+	Queue       string `json:"queue" validate:"required"`
+	ContentType string `json:"content" default:"text/plain"`
+}
+
+type Position struct {
+	MessageID string `json:"message_id"`
+	Queue     string `json:"queue"`
+}
+
+func NewPosition(msg *stomp.Message) Position {
+	messageID := msg.Header.Get(frame.MessageId)
+
+	return Position{
+		MessageID: messageID,
+		Queue:     msg.Destination,
+	}
+}
+
+func parseSDKPosition(sdkPos sdk.Position) (Position, error) {
+	var p Position
+	err := json.Unmarshal([]byte(sdkPos), &p)
+	return p, err
+}
+
+func (p Position) ToSdkPosition() sdk.Position {
+	bs, err := json.Marshal(p)
+	if err != nil {
+		// this should never happen
+		panic(err)
+	}
+
+	return sdk.Position(bs)
+}
+
+func (p Position) toMsg(s *Source) *stomp.Message {
+	var header frame.Header
+	header.Add(frame.MessageId, p.MessageID)
+
+	return &stomp.Message{Header: &header, Destination: p.Queue}
 }
