@@ -28,10 +28,16 @@ var Connector = sdk.Connector{
 //go:generate paramgen -output=paramgen_dest.go DestinationConfig
 
 type Config struct {
+	URL string `json:"url" validate:"required"`
 }
 
 type SourceConfig struct {
+	Config
+	Queue       string `json:"queue" validate:"required"`
+	ContentType string `json:"content" default:"text/plain"`
 }
 
 type DestinationConfig struct {
+	Config
+	Queue string `json:"queue" validate:"required"`
 }
