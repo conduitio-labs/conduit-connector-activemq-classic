@@ -1,53 +1,25 @@
+// Copyright © 2024 Meroxa, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
-	"fmt"
-	"time"
+	sdk "github.com/conduitio/conduit-connector-sdk"
 
-	"github.com/go-stomp/stomp"
+	activemq "github.com/alarbada/conduit-connector-activemq"
 )
 
 func main() {
-	go sendMessage()
-	go receiveMessage("listener 1")
-	go receiveMessage("listener 2")
-
-	select {}
-}
-
-func assert(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
-
-func sendMessage() {
-	conn, err := stomp.Dial("tcp", "localhost:61613")
-	assert(err)
-	defer conn.Disconnect()
-
-	for {
-		err = conn.Send(
-			"/queue/SampleQueue",
-			"text/plain",
-			[]byte("Message to Queue"), nil)
-		assert(err)
-
-		time.Sleep(1 * time.Second)
-	}
-}
-
-func receiveMessage(name string) {
-	conn, err := stomp.Dial("tcp", "localhost:61613")
-	assert(err)
-
-	defer conn.Disconnect()
-
-	sub, err := conn.Subscribe("/queue/SampleQueue", stomp.AckAuto)
-	assert(err)
-
-	for {
-		msg := <-sub.C
-		fmt.Println(name, "received", string(msg.Body))
-	}
+	sdk.Serve(activemq.Connector)
 }
