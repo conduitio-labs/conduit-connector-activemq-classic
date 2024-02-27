@@ -22,3 +22,5 @@ test-acceptance:
 	make up
 	go test -v -run TestAcceptance .
 	make down
+
+test: test-acceptance
