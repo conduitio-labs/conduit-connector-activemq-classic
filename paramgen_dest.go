@@ -9,9 +9,9 @@ import (
 
 func (DestinationConfig) Parameters() map[string]sdk.Parameter {
 	return map[string]sdk.Parameter{
-		"content": {
+		"contentType": {
 			Default:     "text/plain",
-			Description: "content is the content type of the message.",
+			Description: "contentType is the content type of the message.",
 			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},

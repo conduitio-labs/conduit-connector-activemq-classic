@@ -44,7 +44,7 @@ type SourceConfig struct {
 	Queue string `json:"queue" validate:"required"`
 
 	// ContentType is the content type of the message.
-	ContentType string `json:"content" default:"text/plain"`
+	ContentType string `json:"contentType" default:"text/plain"`
 }
 
 type DestinationConfig struct {
@@ -53,7 +53,7 @@ type DestinationConfig struct {
 	// Queue is the name of the queue to write to.
 	Queue string `json:"queue" validate:"required"`
 	// ContentType is the content type of the message.
-	ContentType string `json:"content" default:"text/plain"`
+	ContentType string `json:"contentType" default:"text/plain"`
 }
 
 type Position struct {
