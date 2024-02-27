@@ -92,3 +92,16 @@ func (p Position) toMsg(s *Source) *stomp.Message {
 
 	return &stomp.Message{Header: &header, Destination: p.Queue}
 }
+
+// metadataFromMsg extracts all the present headers from a stomp.Message into
+// sdk.Metadata.
+func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
+	metadata := make(sdk.Metadata)
+
+	for i := range msg.Header.Len() {
+		k, v := msg.Header.GetAt(i)
+		metadata[k] = v
+	}
+
+	return metadata
+}

@@ -74,7 +74,7 @@ func (s *Source) Read(ctx context.Context) (sdk.Record, error) {
 				Queue:     s.config.Queue,
 			}
 			sdkPos = pos.ToSdkPosition()
-			metadata = sdk.Metadata(nil)
+			metadata = metadataFromMsg(msg)
 			key      = sdk.RawData(messageID)
 			payload  = sdk.RawData(msg.Body)
 		)
