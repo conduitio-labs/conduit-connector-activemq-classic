@@ -36,6 +36,12 @@ var Connector = sdk.Connector{
 type Config struct {
 	// URL is the URL of the ActiveMQ classic broker.
 	URL string `json:"url" validate:"required"`
+
+	// User is the username to use when connecting to the broker.
+	User string `json:"user" validate:"required"`
+
+	// Password is the password to use when connecting to the broker.
+	Password string `json:"password" validate:"required"`
 }
 
 type SourceConfig struct {
