@@ -19,16 +19,12 @@ import (
 	"time"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
-	"github.com/matryer/is"
 )
 
-func setupQueueName(t *testing.T, is *is.I) string {
-	panic("not implemented")
-}
-
 func TestAcceptance(t *testing.T) {
-	cfg := map[string]string{}
-	is := is.New(t)
+	cfg := map[string]string{
+		"url": "localhost:61613",
+	}
 
 	driver := sdk.ConfigurableAcceptanceTestDriver{
 		Config: sdk.ConfigurableAcceptanceTestDriverConfig{
@@ -36,8 +32,11 @@ func TestAcceptance(t *testing.T) {
 			SourceConfig:      cfg,
 			DestinationConfig: cfg,
 			BeforeTest: func(t *testing.T) {
-				queueName := setupQueueName(t, is)
-				cfg["queue.name"] = queueName
+				// Ideally we could delete the queue before the test to ensure a clean
+				// slate. However, I don't see a clear way to do this, so I'll assume that
+				// the docker container was started from scratch.
+
+				cfg["queue"] = t.Name()
 			},
 			Skip: []string{
 				"TestSource_Configure_RequiredParams",

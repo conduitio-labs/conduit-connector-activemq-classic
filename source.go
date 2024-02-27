@@ -7,6 +7,7 @@ import (
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/go-stomp/stomp"
+	"github.com/go-stomp/stomp/frame"
 )
 
 type Source struct {
@@ -70,10 +71,11 @@ func (s *Source) Read(ctx context.Context) (sdk.Record, error) {
 			pos = Position{
 				Queue: s.config.Queue,
 			}
-			sdkPos   = pos.ToSdkPosition()
-			metadata = sdk.Metadata(nil)
-			key      = sdk.RawData(nil)
-			payload  = sdk.RawData(msg.Body)
+			sdkPos = pos.ToSdkPosition()
+			metadata  = sdk.Metadata(nil)
+			messageID = msg.Header.Get(frame.MessageId)
+			key       = sdk.RawData(messageID)
+			payload   = sdk.RawData(msg.Body)
 		)
 
 		rec = sdk.Util.Source.NewRecordCreate(sdkPos, metadata, key, payload)
@@ -106,12 +108,16 @@ func (s *Source) Ack(ctx context.Context, position sdk.Position) error {
 }
 
 func (s *Source) Teardown(ctx context.Context) error {
-	if err := s.subscription.Unsubscribe(); err != nil {
-		return fmt.Errorf("failed to unsubscribe from queue: %w", err)
+	if s.subscription != nil {
+		if err := s.subscription.Unsubscribe(); err != nil {
+			return fmt.Errorf("failed to unsubscribe from queue: %w", err)
+		}
 	}
 
-	if err := s.conn.Disconnect(); err != nil {
-		return fmt.Errorf("failed to disconnect from ActiveMQ: %w", err)
+	if s.conn != nil {
+		if err := s.conn.Disconnect(); err != nil {
+			return fmt.Errorf("failed to disconnect from ActiveMQ: %w", err)
+		}
 	}
 
 	sdk.Logger(ctx).Debug().Msg("teardown source")

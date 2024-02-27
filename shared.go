@@ -34,18 +34,25 @@ var Connector = sdk.Connector{
 //go:generate paramgen -output=paramgen_dest.go DestinationConfig
 
 type Config struct {
+	// URL is the URL of the ActiveMQ classic broker.
 	URL string `json:"url" validate:"required"`
 }
 
 type SourceConfig struct {
 	Config
-	Queue       string `json:"queue" validate:"required"`
+	// Queue is the name of the queue to read from.
+	Queue string `json:"queue" validate:"required"`
+
+	// ContentType is the content type of the message.
 	ContentType string `json:"content" default:"text/plain"`
 }
 
 type DestinationConfig struct {
 	Config
-	Queue       string `json:"queue" validate:"required"`
+
+	// Queue is the name of the queue to write to.
+	Queue string `json:"queue" validate:"required"`
+	// ContentType is the content type of the message.
 	ContentType string `json:"content" default:"text/plain"`
 }
 

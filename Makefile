@@ -17,3 +17,8 @@ up:
 
 down:
 	docker compose -f test/docker-compose.yml down -v --remove-orphans
+
+test-acceptance:
+	make down && make up
+	go test -v -run TestAcceptance .
+

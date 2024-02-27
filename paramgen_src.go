@@ -8,5 +8,28 @@ import (
 )
 
 func (SourceConfig) Parameters() map[string]sdk.Parameter {
-	return map[string]sdk.Parameter{}
+	return map[string]sdk.Parameter{
+		"content": {
+			Default:     "text/plain",
+			Description: "content is the content type of the message.",
+			Type:        sdk.ParameterTypeString,
+			Validations: []sdk.Validation{},
+		},
+		"queue": {
+			Default:     "",
+			Description: "queue is the name of the queue to read from.",
+			Type:        sdk.ParameterTypeString,
+			Validations: []sdk.Validation{
+				sdk.ValidationRequired{},
+			},
+		},
+		"url": {
+			Default:     "",
+			Description: "url is the url of the ActiveMQ classic broker.",
+			Type:        sdk.ParameterTypeString,
+			Validations: []sdk.Validation{
+				sdk.ValidationRequired{},
+			},
+		},
+	}
 }

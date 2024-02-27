@@ -55,8 +55,10 @@ func (d *Destination) Write(ctx context.Context, records []sdk.Record) (int, err
 }
 
 func (d *Destination) Teardown(ctx context.Context) error {
-	if err := d.conn.Disconnect(); err != nil {
-		return fmt.Errorf("failed to disconnect from ActiveMQ: %w", err)
+	if d.conn != nil {
+		if err := d.conn.Disconnect(); err != nil {
+			return fmt.Errorf("failed to disconnect from ActiveMQ: %w", err)
+		}
 	}
 
 	sdk.Logger(ctx).Debug().Msg("teardown destination")
