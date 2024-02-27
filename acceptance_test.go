@@ -15,8 +15,11 @@
 package activemq
 
 import (
+	"context"
 	"testing"
 	"time"
+
+	"github.com/rs/zerolog"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
 )
@@ -26,8 +29,12 @@ func TestAcceptance(t *testing.T) {
 		"url": "localhost:61613",
 	}
 
+	logger := zerolog.New(zerolog.NewConsoleWriter())
+	ctx := logger.WithContext(context.Background())
+
 	driver := sdk.ConfigurableAcceptanceTestDriver{
 		Config: sdk.ConfigurableAcceptanceTestDriverConfig{
+			Context:           ctx,
 			Connector:         Connector,
 			SourceConfig:      cfg,
 			DestinationConfig: cfg,

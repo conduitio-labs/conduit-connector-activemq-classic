@@ -68,14 +68,15 @@ func (s *Source) Read(ctx context.Context) (sdk.Record, error) {
 		}
 
 		var (
-			pos = Position{
-				Queue: s.config.Queue,
+			messageID = msg.Header.Get(frame.MessageId)
+			pos       = Position{
+				MessageID: messageID,
+				Queue:     s.config.Queue,
 			}
 			sdkPos = pos.ToSdkPosition()
-			metadata  = sdk.Metadata(nil)
-			messageID = msg.Header.Get(frame.MessageId)
-			key       = sdk.RawData(messageID)
-			payload   = sdk.RawData(msg.Body)
+			metadata = sdk.Metadata(nil)
+			key      = sdk.RawData(messageID)
+			payload  = sdk.RawData(msg.Body)
 		)
 
 		rec = sdk.Util.Source.NewRecordCreate(sdkPos, metadata, key, payload)
