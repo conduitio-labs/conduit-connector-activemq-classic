@@ -38,8 +38,8 @@ func (d *Destination) Open(ctx context.Context) (err error) {
 	if err != nil {
 		return fmt.Errorf("failed to dial to ActiveMQ: %w", err)
 	}
-
 	sdk.Logger(ctx).Debug().Msg("opened destination")
+
 	return nil
 }
 
@@ -49,6 +49,7 @@ func (d *Destination) Write(ctx context.Context, records []sdk.Record) (int, err
 		if err != nil {
 			return 0, fmt.Errorf("failed to send message: %w", err)
 		}
+		sdk.Logger(ctx).Trace().Str("queue", d.config.Queue).Msg("wrote record")
 	}
 
 	return len(records), nil
@@ -60,7 +61,7 @@ func (d *Destination) Teardown(ctx context.Context) error {
 			return fmt.Errorf("failed to disconnect from ActiveMQ: %w", err)
 		}
 	}
-
 	sdk.Logger(ctx).Debug().Msg("teardown destination")
+
 	return nil
 }
