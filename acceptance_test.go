@@ -16,6 +16,8 @@ package activemq
 
 import (
 	"context"
+	"fmt"
+	"math/rand"
 	"testing"
 	"time"
 
@@ -26,7 +28,9 @@ import (
 
 func TestAcceptance(t *testing.T) {
 	cfg := map[string]string{
-		"url": "localhost:61613",
+		"url":      "localhost:61613",
+		"user":     "admin",
+		"password": "admin",
 	}
 
 	logger := zerolog.New(zerolog.NewConsoleWriter())
@@ -39,11 +43,12 @@ func TestAcceptance(t *testing.T) {
 			SourceConfig:      cfg,
 			DestinationConfig: cfg,
 			BeforeTest: func(t *testing.T) {
-				// Ideally we could delete the queue before the test to ensure a clean
-				// slate. However, I don't see a clear way to do this, so I'll assume that
-				// the docker container was started from scratch.
+				// Ideally we would delete the queue before the test to ensure
+				// a clean slate. I don't see a clear way to do this,
+				// so I'll assume that the docker container was started from
+				// scratch.
 
-				cfg["queue"] = t.Name()
+				cfg["queue"] = uniqueQueueName(t)
 			},
 			Skip: []string{
 				"TestSource_Configure_RequiredParams",
@@ -55,4 +60,20 @@ func TestAcceptance(t *testing.T) {
 	}
 
 	sdk.AcceptanceTest(t, driver)
+}
+
+const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+func randomString() string {
+	b := make([]byte, 10)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
+func uniqueQueueName(t *testing.T) string {
+	return fmt.Sprintf(
+		"%v_%v",
+		t.Name(), randomString())
 }

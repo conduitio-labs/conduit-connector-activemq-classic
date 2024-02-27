@@ -18,8 +18,8 @@ services:
     ports:
       - "61613:61613" # STOMP
     environment:
-      ACTIVEMQ_CONNECTION_USER: "connadmin"
-      ACTIVEMQ_CONNECTION_PASSWORD: "connadmin"
+      ACTIVEMQ_CONNECTION_USER: "admin"
+      ACTIVEMQ_CONNECTION_PASSWORD: "admin"
     healthcheck:
       test: ["CMD", "curl", "http://localhost:8161"]
       interval: 100ms
