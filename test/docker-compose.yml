@@ -7,14 +7,34 @@ services:
     ports:
       - "61613:61613" # STOMP
     environment:
-      ACTIVEMQ_CONNECTION_USER: "connadmin"
-      ACTIVEMQ_CONNECTION_PASSWORD: "connadmin"
+      ACTIVEMQ_CONNECTION_USER: "admin"
+      ACTIVEMQ_CONNECTION_PASSWORD: "admin"
+
+  activemq-tls:
+    stop_grace_period: 100ms
+    image: apache/activemq-classic
+    container_name: activemq-classic-tls
+    ports:
+      - "61617:61617"
+    environment:
+      ACTIVEMQ_CONNECTION_USER: "admin"
+      ACTIVEMQ_CONNECTION_PASSWORD: "admin"
+      ACTIVEMQ_SSL_OPTS: "
+        -Djavax.net.ssl.keyStore=/opt/apache-activemq/conf/broker.ks
+        -Djavax.net.ssl.keyStorePassword=password
+        -Djavax.net.ssl.trustStore=/opt/apache-activemq/conf/broker.ts
+        -Djavax.net.ssl.trustStorePassword=password"
+    volumes:
+      - ./activemq.xml:/opt/apache-activemq/conf/activemq.xml
+      - ./certs/broker.ks:/opt/apache-activemq/conf/broker.ks
+      - ./certs/broker.ts:/opt/apache-activemq/conf/broker.ts
+
 
   # for development: starts fast, stops faster
   activemq-dev:
     stop_grace_period: 100ms
     image: apache/activemq-classic
-    container_name: activemq-classic
+    container_name: activemq-classic-dev
     ports:
       - "61613:61613" # STOMP
     environment:
