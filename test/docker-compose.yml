@@ -5,7 +5,7 @@ services:
     image: apache/activemq-classic
     container_name: activemq-classic
     ports:
-      - "61613:61613" # STOMP
+      - "61613:61613"
     environment:
       ACTIVEMQ_CONNECTION_USER: "admin"
       ACTIVEMQ_CONNECTION_PASSWORD: "admin"
@@ -17,7 +17,7 @@ services:
       start_period: 30s
 
   activemq-tls:
-    image: apache/activemq-classic:5.18.3
+    image: apache/activemq-classic
     container_name: activemq-classic-tls
     ports:
       - "61617:61617"
@@ -38,14 +38,13 @@ services:
       start_period: 30s
 
 
-
   # for development: starts fast, stops faster
   activemq-dev:
     stop_grace_period: 100ms
     image: apache/activemq-classic
     container_name: activemq-classic-dev
     ports:
-      - "61613:61613" # STOMP
+      - "61613:61613"
     environment:
       ACTIVEMQ_CONNECTION_USER: "admin"
       ACTIVEMQ_CONNECTION_PASSWORD: "admin"

@@ -17,3 +17,5 @@ openssl pkcs12 -in client.p12 -out client_cert.pem -clcerts -nokeys -password pa
 openssl pkcs12 -in client.p12 -out client_key.pem -nocerts -nodes -password pass:password
 keytool -importkeystore -srckeystore broker.ks -destkeystore broker.p12 -srcstoretype JKS -deststoretype PKCS12 -srcstorepass password -deststorepass password -noprompt
 openssl pkcs12 -in broker.p12 -out broker.pem -clcerts -nokeys -password pass:password
+
+chmod 644 *

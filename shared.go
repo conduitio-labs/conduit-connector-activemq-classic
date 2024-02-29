@@ -1,3 +1,17 @@
+// Copyright © 2024 Meroxa, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package activemq
 
 import (
@@ -117,7 +131,15 @@ func (p Position) toMsg(s *Source) *stomp.Message {
 	var header frame.Header
 	header.Add(frame.MessageId, p.MessageID)
 
-	return &stomp.Message{Header: &header, Destination: p.Queue}
+	return &stomp.Message{
+		Err:          nil,
+		Destination:  p.Queue,
+		ContentType:  s.config.ContentType,
+		Conn:         s.conn,
+		Subscription: s.subscription,
+		Header:       &header,
+		Body:         []byte{},
+	}
 }
 
 // metadataFromMsg extracts all the present headers from a stomp.Message into
@@ -163,6 +185,9 @@ func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 	caCertPool.AppendCertsFromPEM(caCert)
 
 	tlsConfig := &tls.Config{
+		MinVersion: tls.VersionTLS12,
+		MaxVersion: tls.VersionTLS13,
+
 		Certificates: []tls.Certificate{cert},
 		RootCAs:      caCertPool,
 	}

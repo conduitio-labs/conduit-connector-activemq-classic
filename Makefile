@@ -29,8 +29,15 @@ clean-tls:
 lint:
 	golangci-lint run
 
-test: clean-tls setup-tls up
-	go test -v -run TestAcceptance .
-	make down
+test:
+	rm -rf test/certs
+	cd test && ./setup-tls.sh
+	docker compose -f test/docker-compose.yml up activemq \
+		--quiet-pull -d --wait
+	go test -v -count=1 -race .; ret=$$?; \
+		docker compose -f test/docker-compose.yml down && \
+		rm -rf test/certs && \
+		exit $$ret
+
 
 
