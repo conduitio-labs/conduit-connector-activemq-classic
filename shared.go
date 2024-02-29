@@ -163,9 +163,14 @@ func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 	caCertPool.AppendCertsFromPEM(caCert)
 
 	tlsConfig := &tls.Config{
-		Certificates:       []tls.Certificate{cert},
-		RootCAs:            caCertPool,
-		InsecureSkipVerify: version == "(devel)",
+		Certificates: []tls.Certificate{cert},
+		RootCAs:      caCertPool,
+	}
+
+	// version will be overwritten at compile time when building a release,
+	// so this should only be true when running in development mode.
+	if version == "(devel)" {
+		tlsConfig.InsecureSkipVerify = true
 	}
 
 	netConn, err := tls.Dial("tcp", config.URL, tlsConfig)
