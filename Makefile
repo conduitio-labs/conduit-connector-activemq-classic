@@ -26,6 +26,9 @@ setup-tls:
 clean-tls:
 	rm -rf test/certs
 
+lint:
+	golangci-lint run
+
 test: clean-tls setup-tls up
 	go test -v -run TestAcceptance .
 	make down
