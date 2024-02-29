@@ -37,8 +37,7 @@ func (s *Source) Configure(ctx context.Context, cfg map[string]string) error {
 }
 
 func (s *Source) Open(ctx context.Context, sdkPos sdk.Position) (err error) {
-	loginOpt := stomp.ConnOpt.Login(s.config.User, s.config.Password)
-	s.conn, err = stomp.Dial("tcp", s.config.URL, loginOpt)
+	s.conn, err = connect(ctx, s.config.Config)
 	if err != nil {
 		return fmt.Errorf("failed to dial to ActiveMQ: %w", err)
 	}

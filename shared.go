@@ -1,7 +1,12 @@
 package activemq
 
 import (
+	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
+	"fmt"
+	"os"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/go-stomp/stomp"
@@ -43,7 +48,7 @@ type Config struct {
 	// Password is the password to use when connecting to the broker.
 	Password string `json:"password" validate:"required"`
 
-	TLSConfig `json:"tlsConfig"`
+	TLS TLSConfig `json:"tlsConfig"`
 }
 
 type TLSConfig struct {
@@ -126,4 +131,54 @@ func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
 	}
 
 	return metadata
+}
+
+func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
+	loginOpt := stomp.ConnOpt.Login(config.User, config.Password)
+	if !config.TLS.UseTLS {
+		conn, err := stomp.Dial("tcp", config.URL, loginOpt)
+		if err != nil {
+			return nil, fmt.Errorf("failed to connect to ActiveMQ: %w", err)
+		}
+		sdk.Logger(ctx).Debug().Msg("opened connection to ActiveMQ")
+
+		return conn, nil
+	}
+
+	sdk.Logger(ctx).Debug().Msg("using TLS to connect to ActiveMQ")
+
+	cert, err := tls.LoadX509KeyPair(config.TLS.ClientCertPath, config.TLS.ClientKeyPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load client key pair: %w", err)
+	}
+	sdk.Logger(ctx).Debug().Msg("loaded client key pair")
+
+	caCert, err := os.ReadFile(config.TLS.CaCertPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load CA cert: %w", err)
+	}
+	sdk.Logger(ctx).Debug().Msg("loaded CA cert")
+
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+
+	tlsConfig := &tls.Config{
+		Certificates:       []tls.Certificate{cert},
+		RootCAs:            caCertPool,
+		InsecureSkipVerify: version == "(devel)",
+	}
+
+	netConn, err := tls.Dial("tcp", config.URL, tlsConfig)
+	if err != nil {
+		panic(err)
+	}
+	sdk.Logger(ctx).Debug().Msg("TLS connection established")
+
+	conn, err := stomp.Connect(netConn, loginOpt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to ActiveMQ: %w", err)
+	}
+	sdk.Logger(ctx).Debug().Msg("STOMP connection using tls established")
+
+	return conn, nil
 }
