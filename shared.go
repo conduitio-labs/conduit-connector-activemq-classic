@@ -42,6 +42,22 @@ type Config struct {
 
 	// Password is the password to use when connecting to the broker.
 	Password string `json:"password" validate:"required"`
+
+	TLSConfig `json:"tlsConfig"`
+}
+
+type TLSConfig struct {
+	// UseTLS is a flag to enable or disable TLS.
+	UseTLS bool `json:"useTLS" default:"false"`
+
+	// ClientKeyPath is the path to the client key file.
+	ClientKeyPath string `json:"clientKeyPath" validate:"required"`
+
+	// ClientCertPath is the path to the client certificate file.
+	ClientCertPath string `json:"clientCertPath" validate:"required"`
+
+	// CaCertPath is the path to the CA certificate file.
+	CaCertPath string `json:"caCertPath" validate:"required"`
 }
 
 type SourceConfig struct {

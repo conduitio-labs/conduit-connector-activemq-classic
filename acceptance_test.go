@@ -62,6 +62,41 @@ func TestAcceptance(t *testing.T) {
 	sdk.AcceptanceTest(t, driver)
 }
 
+func TestAcceptanceTLS(t *testing.T) {
+	cfg := map[string]string{
+		"url":                      "localhost:61617",
+		"user":                     "admin",
+		"password":                 "admin",
+		"tlsConfig.useTLS":         "true",
+		"tlsConfig.clientKeyPath":  "./test/certs/client_key.pem",
+		"tlsConfig.clientCertPath": "./test/certs/client_cert.pem",
+		"tlsConfig.caCertPath":     "./test/certs/broker.pem",
+	}
+
+	logger := zerolog.New(zerolog.NewConsoleWriter())
+	ctx := logger.WithContext(context.Background())
+
+	driver := sdk.ConfigurableAcceptanceTestDriver{
+		Config: sdk.ConfigurableAcceptanceTestDriverConfig{
+			Context:           ctx,
+			Connector:         Connector,
+			SourceConfig:      cfg,
+			DestinationConfig: cfg,
+			BeforeTest: func(t *testing.T) {
+				cfg["queue"] = uniqueQueueName(t)
+			},
+			Skip: []string{
+				"TestSource_Configure_RequiredParams",
+				"TestDestination_Configure_RequiredParams",
+			},
+			WriteTimeout: 500 * time.Millisecond,
+			ReadTimeout:  500 * time.Millisecond,
+		},
+	}
+
+	sdk.AcceptanceTest(t, driver)
+}
+
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 func randomString() string {

@@ -12,7 +12,7 @@ install-paramgen:
 	go install github.com/conduitio/conduit-connector-sdk/cmd/paramgen@latest
 
 up:
-	docker compose -f test/docker-compose.yml up activemq-dev --quiet-pull -d --wait 
+	docker compose -f test/docker-compose.yml up activemq activemq-tls --quiet-pull -d --wait 
 
 down:
 	docker compose -f test/docker-compose.yml down -v --remove-orphans
@@ -20,13 +20,14 @@ down:
 up-tls: clean-tls setup-tls
 	docker compose -f test/docker-compose.yml up activemq-tls --quiet-pull -d --wait 
 
+setup-tls:
+	cd test && ./setup-tls.sh
+
 clean-tls:
 	rm -rf test/certs
 
-test-acceptance:
-	make up
+test: clean-tls setup-tls up
 	go test -v -run TestAcceptance .
 	make down
 
-test: test-acceptance
 
