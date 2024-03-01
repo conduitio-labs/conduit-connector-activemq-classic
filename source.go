@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/go-stomp/stomp/v3"
@@ -31,7 +32,41 @@ type Source struct {
 	conn         *stomp.Conn
 	subscription *stomp.Subscription
 
-	msgMap map[string]*stomp.Message
+	storedMessages messageMap
+}
+
+type messageMap struct {
+	mutex *sync.Mutex
+	msgs  map[string]*stomp.Message
+}
+
+func newMessageMap() messageMap {
+	return messageMap{
+		mutex: &sync.Mutex{},
+		msgs:  make(map[string]*stomp.Message),
+	}
+}
+
+func (m *messageMap) add(key string, msg *stomp.Message) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	m.msgs[key] = msg
+}
+
+func (m *messageMap) get(key string) (*stomp.Message, bool) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	msg, ok := m.msgs[key]
+	return msg, ok
+}
+
+func (m *messageMap) remove(key string) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	delete(m.msgs, key)
 }
 
 func NewSource() sdk.Source {
@@ -49,7 +84,7 @@ func (s *Source) Configure(ctx context.Context, cfg map[string]string) error {
 	}
 	sdk.Logger(ctx).Debug().Any("config", s.config).Msg("configured source")
 
-	s.msgMap = make(map[string]*stomp.Message)
+	s.storedMessages = newMessageMap()
 
 	return nil
 }
@@ -117,7 +152,7 @@ func (s *Source) Read(ctx context.Context) (sdk.Record, error) {
 		rec = sdk.Util.Source.NewRecordCreate(sdkPos, metadata, key, payload)
 
 		sdk.Logger(ctx).Trace().Str("queue", s.config.Queue).Msgf("read message")
-		s.msgMap[messageID] = msg
+		s.storedMessages.add(messageID, msg)
 
 		return rec, nil
 	}
@@ -129,7 +164,7 @@ func (s *Source) Ack(ctx context.Context, position sdk.Position) error {
 		return fmt.Errorf("failed to parse position: %w", err)
 	}
 
-	msg, ok := s.msgMap[pos.MessageID]
+	msg, ok := s.storedMessages.get(pos.MessageID)
 	if !ok {
 		return fmt.Errorf("message with ID %q not found", pos.MessageID)
 	}
@@ -137,6 +172,8 @@ func (s *Source) Ack(ctx context.Context, position sdk.Position) error {
 	if err := s.conn.Ack(msg); err != nil {
 		return fmt.Errorf("failed to ack message: %w", err)
 	}
+
+	s.storedMessages.remove(pos.MessageID)
 
 	return nil
 }
