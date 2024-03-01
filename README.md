@@ -1,0 +1,28 @@
+# Conduit Connector ActiveMQ Classic
+
+The ActiveMQ Classic connector is one of [Conduit](https://conduit.io) plugins. The connector provides both a source and a destination connector for [ActiveMQ Classic](https://activemq.apache.org/components/classic/).
+
+It uses the [stomp protocol](https://stomp.github.io/) to connect to ActiveMQ.
+
+## How to build?
+Run `make build` to build the connector.
+
+## Testing
+Run `make test` to run all the tests. The command will handle starting and stopping docker containers for you.
+
+
+## Configuration
+
+Both the source and destination connectors share the same configuration:
+
+| name | description | required | default value |
+| ---- | ----------- | -------- | ------------- |
+| `url` | URL of the ActiveMQ classic broker. | true |  |
+| `queue` | Name of the queue to read from or write to. | true |  |
+| `user` | Username to use when connecting to the broker. | true |  |
+| `password` | Password to use when connecting to the broker. | true |  |
+| `tlsConfig.useTLS` | Flag to enable or disable TLS. | false | `false` |
+| `tlsConfig.clientKeyPath` | Path to the client key file. | false |  |
+| `tlsConfig.clientCertPath` | Path to the client certificate file. | false |  |
+| `tlsConfig.caCertPath` | Path to the CA certificate file. | false |  |
+| `contentType` | Content type of the message. | false | `text/plain` |
