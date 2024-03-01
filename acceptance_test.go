@@ -17,7 +17,6 @@ package activemq
 import (
 	"fmt"
 	"math/rand"
-	"strings"
 	"testing"
 	"time"
 
@@ -98,7 +97,5 @@ func randomString() string {
 }
 
 func uniqueQueueName(t *testing.T) string {
-	testName := fmt.Sprintf("%v_%v", t.Name(), randomString())
-
-	return strings.ReplaceAll(testName, "/", "_")
+	return fmt.Sprintf("%v_%v", t.Name(), randomString())
 }
