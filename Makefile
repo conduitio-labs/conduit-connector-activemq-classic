@@ -20,27 +20,11 @@ up-dev:
 down:
 	docker compose -f test/docker-compose.yml down -v --remove-orphans
 
-up-tls: clean-tls setup-tls
-	docker compose -f test/docker-compose.yml up activemq-tls --quiet-pull -d --wait 
-
-
-
-setup-tls:
-	cd test && ./setup-tls.sh
-
-clean-tls:
-	rm -rf test/certs
-
 lint:
 	golangci-lint run
 
-test:
-	rm -rf test/certs
-	cd test && ./setup-tls.sh
-	docker compose -f test/docker-compose.yml up activemq activemq-tls \
-		--quiet-pull -d --wait
+test: up
 	go test -v -count=1 -race .; ret=$$?; \
 		docker compose -f test/docker-compose.yml down && \
-		rm -rf test/certs && \
 		exit $$ret
 
