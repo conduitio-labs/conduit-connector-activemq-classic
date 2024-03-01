@@ -30,6 +30,8 @@ type Source struct {
 
 	conn         *stomp.Conn
 	subscription *stomp.Subscription
+
+	msgMap map[string]*stomp.Message
 }
 
 func NewSource() sdk.Source {
@@ -46,6 +48,8 @@ func (s *Source) Configure(ctx context.Context, cfg map[string]string) error {
 		return fmt.Errorf("failed to parse config: %w", err)
 	}
 	sdk.Logger(ctx).Debug().Any("config", s.config).Msg("configured source")
+
+	s.msgMap = make(map[string]*stomp.Message)
 
 	return nil
 }
@@ -113,6 +117,7 @@ func (s *Source) Read(ctx context.Context) (sdk.Record, error) {
 		rec = sdk.Util.Source.NewRecordCreate(sdkPos, metadata, key, payload)
 
 		sdk.Logger(ctx).Trace().Str("queue", s.config.Queue).Msgf("read message")
+		s.msgMap[messageID] = msg
 
 		return rec, nil
 	}
@@ -124,16 +129,15 @@ func (s *Source) Ack(ctx context.Context, position sdk.Position) error {
 		return fmt.Errorf("failed to parse position: %w", err)
 	}
 
-	// The go-stomp library doesn't provide another way to ack a message than
-	// to give the message itself, so we try to recreate the message from the
-	// position and ack it.
+	msg, ok := s.msgMap[pos.MessageID]
+	if !ok {
+		return fmt.Errorf("message with ID %q not found", pos.MessageID)
+	}
 
-	fakeMsg := pos.toMsg(s)
-	if err := s.conn.Ack(fakeMsg); err != nil {
+	if err := s.conn.Ack(msg); err != nil {
 		return fmt.Errorf("failed to ack message: %w", err)
 	}
 
-	sdk.Logger(ctx).Trace().Msg("acked message")
 	return nil
 }
 
