@@ -175,6 +175,8 @@ func (s *Source) Ack(ctx context.Context, position sdk.Position) error {
 
 	s.storedMessages.remove(pos.MessageID)
 
+	sdk.Logger(ctx).Trace().Str("queue", s.config.Queue).Msgf("acked message")
+
 	return nil
 }
 

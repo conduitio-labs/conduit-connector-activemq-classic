@@ -25,7 +25,6 @@ import (
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/go-stomp/stomp/v3"
-	"github.com/go-stomp/stomp/v3/frame"
 )
 
 // version is set during the build process with ldflags (see Makefile).
@@ -103,15 +102,6 @@ type Position struct {
 	Queue     string `json:"queue"`
 }
 
-func NewPosition(msg *stomp.Message) Position {
-	messageID := msg.Header.Get(frame.MessageId)
-
-	return Position{
-		MessageID: messageID,
-		Queue:     msg.Destination,
-	}
-}
-
 func parseSDKPosition(sdkPos sdk.Position) (Position, error) {
 	decoder := json.NewDecoder(bytes.NewBuffer(sdkPos))
 	decoder.DisallowUnknownFields()
@@ -129,22 +119,6 @@ func (p Position) ToSdkPosition() sdk.Position {
 	}
 
 	return sdk.Position(bs)
-}
-
-func (p Position) toMsg(s *Source) *stomp.Message {
-	var header frame.Header
-	header.Add(frame.MessageId, p.MessageID)
-	header.Add(frame.Ack, p.MessageID)
-
-	return &stomp.Message{
-		Err:          nil,
-		Destination:  p.Queue,
-		ContentType:  s.config.ContentType,
-		Conn:         s.conn,
-		Subscription: s.subscription,
-		Header:       &header,
-		Body:         []byte{},
-	}
 }
 
 // metadataFromMsg extracts all the present headers from a stomp.Message into
