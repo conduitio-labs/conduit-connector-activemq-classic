@@ -19,7 +19,7 @@ import (
 	"fmt"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
-	"github.com/go-stomp/stomp"
+	"github.com/go-stomp/stomp/v3"
 )
 
 type Destination struct {
@@ -58,10 +58,10 @@ func (d *Destination) Open(ctx context.Context) (err error) {
 }
 
 func (d *Destination) Write(ctx context.Context, records []sdk.Record) (int, error) {
-	for _, rec := range records {
+	for i, rec := range records {
 		err := d.conn.Send(d.config.Queue, d.config.ContentType, rec.Bytes())
 		if err != nil {
-			return 0, fmt.Errorf("failed to send message: %w", err)
+			return i, fmt.Errorf("failed to send message: %w", err)
 		}
 		sdk.Logger(ctx).Trace().Str("queue", d.config.Queue).Msg("wrote record")
 	}

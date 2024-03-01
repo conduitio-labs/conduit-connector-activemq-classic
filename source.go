@@ -20,8 +20,8 @@ import (
 	"fmt"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
-	"github.com/go-stomp/stomp"
-	"github.com/go-stomp/stomp/frame"
+	"github.com/go-stomp/stomp/v3"
+	"github.com/go-stomp/stomp/v3/frame"
 )
 
 type Source struct {
@@ -50,10 +50,27 @@ func (s *Source) Configure(ctx context.Context, cfg map[string]string) error {
 	return nil
 }
 
-func (s *Source) Open(ctx context.Context, _ sdk.Position) (err error) {
+func (s *Source) Open(ctx context.Context, sdkPos sdk.Position) (err error) {
 	s.conn, err = connect(ctx, s.config.Config)
 	if err != nil {
 		return fmt.Errorf("failed to dial to ActiveMQ: %w", err)
+	}
+
+	if sdkPos != nil {
+		pos, err := parseSDKPosition(sdkPos)
+		if err != nil {
+			return fmt.Errorf("failed to parse position: %w", err)
+		}
+
+		if s.config.Queue != "" && s.config.Queue != pos.Queue {
+			return fmt.Errorf(
+				"the old position contains a different queue name than the connector configuration (%q vs %q), please check if the configured queue name changed since the last run",
+				pos.Queue, s.config.Queue,
+			)
+		}
+
+		sdk.Logger(ctx).Debug().Msg("got queue name from given position")
+		s.config.Queue = pos.Queue
 	}
 
 	s.subscription, err = s.conn.Subscribe(s.config.Queue, stomp.AckClientIndividual)
@@ -95,9 +112,7 @@ func (s *Source) Read(ctx context.Context) (sdk.Record, error) {
 
 		rec = sdk.Util.Source.NewRecordCreate(sdkPos, metadata, key, payload)
 
-		sdk.Logger(ctx).Trace().
-			Str("queue", s.config.Queue).
-			Msgf("read message")
+		sdk.Logger(ctx).Trace().Str("queue", s.config.Queue).Msgf("read message")
 
 		return rec, nil
 	}

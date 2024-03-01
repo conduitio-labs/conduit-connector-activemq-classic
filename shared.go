@@ -15,6 +15,7 @@
 package activemq
 
 import (
+	"bytes"
 	"context"
 	"crypto/tls"
 	"crypto/x509"
@@ -23,8 +24,8 @@ import (
 	"os"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
-	"github.com/go-stomp/stomp"
-	"github.com/go-stomp/stomp/frame"
+	"github.com/go-stomp/stomp/v3"
+	"github.com/go-stomp/stomp/v3/frame"
 )
 
 // version is set during the build process with ldflags (see Makefile).
@@ -112,8 +113,11 @@ func NewPosition(msg *stomp.Message) Position {
 }
 
 func parseSDKPosition(sdkPos sdk.Position) (Position, error) {
+	decoder := json.NewDecoder(bytes.NewBuffer(sdkPos))
+	decoder.DisallowUnknownFields()
+
 	var p Position
-	err := json.Unmarshal([]byte(sdkPos), &p)
+	err := decoder.Decode(&p)
 	return p, err
 }
 
@@ -130,6 +134,7 @@ func (p Position) ToSdkPosition() sdk.Position {
 func (p Position) toMsg(s *Source) *stomp.Message {
 	var header frame.Header
 	header.Add(frame.MessageId, p.MessageID)
+	header.Add(frame.Ack, p.MessageID)
 
 	return &stomp.Message{
 		Err:          nil,
