@@ -31,6 +31,18 @@ func (SourceConfig) Parameters() map[string]sdk.Parameter {
 				sdk.ValidationRequired{},
 			},
 		},
+		"recvTimeoutHeartbeat": {
+			Default:     "2s",
+			Description: "recvTimeoutHeartbeat specifies the minimum amount of time between the client expecting to receive heartbeat notifications from the server",
+			Type:        sdk.ParameterTypeDuration,
+			Validations: []sdk.Validation{},
+		},
+		"sendTimeoutHeartbeat": {
+			Default:     "2s",
+			Description: "sendTimeoutHeartbeat specifies the maximum amount of time between the client sending heartbeat notifications from the server",
+			Type:        sdk.ParameterTypeDuration,
+			Validations: []sdk.Validation{},
+		},
 		"tlsConfig.caCertPath": {
 			Default:     "",
 			Description: "caCertPath is the path to the CA certificate file.",

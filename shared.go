@@ -23,6 +23,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/go-stomp/stomp/v3"
@@ -62,6 +63,14 @@ type Config struct {
 
 	// Password is the password to use when connecting to the broker.
 	Password string `json:"password" validate:"required"`
+
+	// SendTimeoutHeartbeat specifies the maximum amount of time between the
+	// client sending heartbeat notifications from the server
+	SendTimeoutHeartbeat time.Duration `json:"sendTimeoutHeartbeat" default:"2s"`
+
+	// RecvTimeoutHeartbeat specifies the minimum amount of time between the
+	// client expecting to receive heartbeat notifications from the server
+	RecvTimeoutHeartbeat time.Duration `json:"recvTimeoutHeartbeat" default:"2s"`
 
 	TLS TLSConfig `json:"tlsConfig"`
 }
@@ -137,8 +146,9 @@ func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
 
 func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 	loginOpt := stomp.ConnOpt.Login(config.User, config.Password)
+	heartbeat := stomp.ConnOpt.HeartBeat(config.SendTimeoutHeartbeat, config.RecvTimeoutHeartbeat)
 	if !config.TLS.UseTLS {
-		conn, err := stomp.Dial("tcp", config.URL, loginOpt)
+		conn, err := stomp.Dial("tcp", config.URL, loginOpt, heartbeat)
 		if err != nil {
 			return nil, fmt.Errorf("failed to connect to ActiveMQ: %w", err)
 		}
@@ -184,7 +194,7 @@ func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 	}
 	sdk.Logger(ctx).Debug().Msg("TLS connection established")
 
-	conn, err := stomp.Connect(netConn, loginOpt)
+	conn, err := stomp.Connect(netConn, loginOpt, heartbeat)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to ActiveMQ: %w", err)
 	}
