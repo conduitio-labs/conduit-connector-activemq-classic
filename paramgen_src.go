@@ -35,25 +35,19 @@ func (SourceConfig) Parameters() map[string]sdk.Parameter {
 			Default:     "",
 			Description: "caCertPath is the path to the CA certificate file.",
 			Type:        sdk.ParameterTypeString,
-			Validations: []sdk.Validation{
-				sdk.ValidationRequired{},
-			},
+			Validations: []sdk.Validation{},
 		},
 		"tlsConfig.clientCertPath": {
 			Default:     "",
 			Description: "clientCertPath is the path to the client certificate file.",
 			Type:        sdk.ParameterTypeString,
-			Validations: []sdk.Validation{
-				sdk.ValidationRequired{},
-			},
+			Validations: []sdk.Validation{},
 		},
 		"tlsConfig.clientKeyPath": {
 			Default:     "",
 			Description: "clientKeyPath is the path to the client key file.",
 			Type:        sdk.ParameterTypeString,
-			Validations: []sdk.Validation{
-				sdk.ValidationRequired{},
-			},
+			Validations: []sdk.Validation{},
 		},
 		"tlsConfig.useTLS": {
 			Default:     "false",

@@ -70,13 +70,13 @@ type TLSConfig struct {
 	UseTLS bool `json:"useTLS" default:"false"`
 
 	// ClientKeyPath is the path to the client key file.
-	ClientKeyPath string `json:"clientKeyPath" validate:"required"`
+	ClientKeyPath string `json:"clientKeyPath"`
 
 	// ClientCertPath is the path to the client certificate file.
-	ClientCertPath string `json:"clientCertPath" validate:"required"`
+	ClientCertPath string `json:"clientCertPath"`
 
 	// CaCertPath is the path to the CA certificate file.
-	CaCertPath string `json:"caCertPath" validate:"required"`
+	CaCertPath string `json:"caCertPath"`
 }
 
 type SourceConfig struct {
