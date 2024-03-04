@@ -181,18 +181,5 @@ func (s *Source) Ack(ctx context.Context, position sdk.Position) error {
 }
 
 func (s *Source) Teardown(ctx context.Context) error {
-	if s.subscription != nil {
-		if err := s.subscription.Unsubscribe(); err != nil {
-			return fmt.Errorf("failed to unsubscribe from queue: %w", err)
-		}
-	}
-
-	if s.conn != nil {
-		if err := s.conn.Disconnect(); err != nil {
-			return fmt.Errorf("failed to disconnect from ActiveMQ: %w", err)
-		}
-	}
-
-	sdk.Logger(ctx).Debug().Msg("teardown source")
-	return nil
+	return teardown(ctx, s.subscription, s.conn)
 }

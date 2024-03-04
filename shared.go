@@ -20,6 +20,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
@@ -190,4 +191,23 @@ func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 	sdk.Logger(ctx).Debug().Msg("STOMP connection using tls established")
 
 	return conn, nil
+}
+
+func teardown(ctx context.Context, subs *stomp.Subscription, conn *stomp.Conn) error {
+	if subs != nil {
+		err := subs.Unsubscribe()
+		if errors.Is(err, stomp.ErrCompletedSubscription) {
+			sdk.Logger(context.Background()).Debug().Msg("subscription already unsubscribed")
+		} else if err != nil {
+			return fmt.Errorf("failed to unsubscribe: %w", err)
+		}
+	}
+
+	if conn != nil {
+		if err := conn.Disconnect(); err != nil {
+			return fmt.Errorf("failed to disconnect from ActiveMQ: %w", err)
+		}
+	}
+
+	return nil
 }
