@@ -207,7 +207,7 @@ func teardown(ctx context.Context, subs *stomp.Subscription, conn *stomp.Conn) e
 	if subs != nil {
 		err := subs.Unsubscribe()
 		if errors.Is(err, stomp.ErrCompletedSubscription) {
-			sdk.Logger(context.Background()).Debug().Msg("subscription already unsubscribed")
+			sdk.Logger(ctx).Debug().Msg("subscription already unsubscribed")
 		} else if err != nil {
 			return fmt.Errorf("failed to unsubscribe: %w", err)
 		}
