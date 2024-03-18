@@ -8,8 +8,11 @@ build:
 generate:
 	go generate ./...
 
-install-paramgen:
-	go install github.com/conduitio/conduit-connector-sdk/cmd/paramgen@latest
+.PHONY: install-tools
+install-tools:
+	@echo Installing tools from tools.go
+	@go list -e -f '{{ join .Imports "\n" }}' tools.go | xargs -I % go list -f "%@{{.Module.Version}}" % | xargs -tI % go install %
+	@go mod tidy
 
 up:
 	docker compose -f test/docker-compose.yml up activemq activemq-tls --quiet-pull -d --wait 
