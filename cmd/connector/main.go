@@ -15,9 +15,8 @@
 package main
 
 import (
-	sdk "github.com/conduitio/conduit-connector-sdk"
-
 	activemq "github.com/alarbada/conduit-connector-activemq-classic"
+	sdk "github.com/conduitio/conduit-connector-sdk"
 )
 
 func main() {

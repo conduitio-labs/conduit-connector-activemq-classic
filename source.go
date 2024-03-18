@@ -127,7 +127,11 @@ func (s *Source) Read(ctx context.Context) (sdk.Record, error) {
 
 	select {
 	case <-ctx.Done():
-		return rec, ctx.Err()
+		if err := ctx.Err(); err != nil {
+			return rec, fmt.Errorf("context error: %w", err)
+		}
+
+		return rec, nil
 	case msg, ok := <-s.subscription.C:
 		if !ok {
 			return rec, errors.New("source message channel closed")

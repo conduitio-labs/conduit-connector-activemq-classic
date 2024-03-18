@@ -117,8 +117,11 @@ func parseSDKPosition(sdkPos sdk.Position) (Position, error) {
 	decoder.DisallowUnknownFields()
 
 	var p Position
-	err := decoder.Decode(&p)
-	return p, err
+	if err := decoder.Decode(&p); err != nil {
+		return p, fmt.Errorf("failed to parse position: %w", err)
+	}
+
+	return p, nil
 }
 
 func (p Position) ToSdkPosition() sdk.Position {
