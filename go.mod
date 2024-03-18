@@ -1,4 +1,4 @@
-module github.com/alarbada/conduit-connector-activemq-classic
+module github.com/conduitio-labs/conduit-connector-activemqclassic
 
 go 1.22.0
 
