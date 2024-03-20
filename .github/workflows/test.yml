@@ -16,5 +16,5 @@ jobs:
         with:
           go-version-file: 'go.mod'
 
-      - name: Integration test with activemq classic
+      - name: Run all tests
         run: make test
