@@ -33,7 +33,7 @@ type Config struct {
 	Queue string `json:"queue" validate:"required"`
 
 	// SendTimeoutHeartbeat specifies the maximum amount of time between the
-	// client sending heartbeat notifications from the server
+	// client sending heartbeat notifications to the server
 	SendTimeoutHeartbeat time.Duration `json:"sendTimeoutHeartbeat" default:"2s"`
 
 	// RecvTimeoutHeartbeat specifies the minimum amount of time between the
