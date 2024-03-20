@@ -63,7 +63,4 @@ type SourceConfig struct {
 
 type DestinationConfig struct {
 	Config
-
-	// ContentType is the content type of the message.
-	ContentType string `json:"contentType" default:"text/plain"`
 }

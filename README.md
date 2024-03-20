@@ -30,15 +30,6 @@ Both the source and destination connectors share these configuration parameters:
 
 (*) Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
 
-### Destination configuration
-
-The destination connector accepts an optional `contentType` configuration parameter:
-
-| name | description | required | default value |
-| ---- | ----------- | -------- | ------------- |
-| `contentType` | Content type of the message. | false | `text/plain` |
-
-
 
 Example of a `pipeline.yml` file using `file to activemq classic` and `activemq classic to file` pipelines: 
 

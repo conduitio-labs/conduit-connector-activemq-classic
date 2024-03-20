@@ -59,7 +59,7 @@ func (d *Destination) Open(ctx context.Context) (err error) {
 
 func (d *Destination) Write(ctx context.Context, records []sdk.Record) (int, error) {
 	for i, rec := range records {
-		err := d.conn.Send(d.config.Queue, d.config.ContentType, rec.Bytes())
+		err := d.conn.Send(d.config.Queue, "application/json", rec.Bytes())
 		if err != nil {
 			return i, fmt.Errorf("failed to send message: %w", err)
 		}
