@@ -58,9 +58,6 @@ type SourceConfig struct {
 	Config
 	// Queue is the name of the queue to read from.
 	Queue string `json:"queue" validate:"required"`
-
-	// ContentType is the content type of the message.
-	ContentType string `json:"contentType" default:"text/plain"`
 }
 
 type DestinationConfig struct {
