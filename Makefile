@@ -3,7 +3,7 @@
 VERSION=$(shell git describe --tags --dirty --always)
 
 build:
-	go build -ldflags "-X 'github.com/conduitio-labs/conduit-connector-activemqclassic.version=${VERSION}'" -o activemq-classic cmd/connector/main.go
+	go build -ldflags "-X 'github.com/conduitio-labs/conduit-connector-activemq-classic.version=${VERSION}'" -o activemq-classic cmd/connector/main.go
 
 generate:
 	go generate ./...

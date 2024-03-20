@@ -15,7 +15,7 @@
 package main
 
 import (
-	activemq "github.com/conduitio-labs/conduit-connector-activemqclassic"
+	activemq "github.com/conduitio-labs/conduit-connector-activemq-classic"
 	sdk "github.com/conduitio/conduit-connector-sdk"
 )
 
