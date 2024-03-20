@@ -23,89 +23,10 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"time"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/go-stomp/stomp/v3"
 )
-
-// version is set during the build process with ldflags (see Makefile).
-// Default version matches default from runtime/debug.
-var version = "(devel)"
-
-// Specification returns the connector's specification.
-func Specification() sdk.Specification {
-	return sdk.Specification{
-		Name:        "activemq",
-		Summary:     "An ActiveMQ classic source and destination plugin for Conduit, written in Go.",
-		Description: "An ActiveMQ classic source and destination plugin for Conduit, written in Go.",
-		Version:     version,
-		Author:      "Meroxa, Inc.",
-	}
-}
-
-// Connector combines all constructors for each plugin in one struct.
-var Connector = sdk.Connector{
-	NewSpecification: Specification,
-	NewSource:        NewSource,
-	NewDestination:   NewDestination,
-}
-
-//go:generate paramgen -output=paramgen_src.go SourceConfig
-//go:generate paramgen -output=paramgen_dest.go DestinationConfig
-
-type Config struct {
-	// URL is the URL of the ActiveMQ classic broker.
-	URL string `json:"url" validate:"required"`
-
-	// User is the username to use when connecting to the broker.
-	User string `json:"user" validate:"required"`
-
-	// Password is the password to use when connecting to the broker.
-	Password string `json:"password" validate:"required"`
-
-	// SendTimeoutHeartbeat specifies the maximum amount of time between the
-	// client sending heartbeat notifications from the server
-	SendTimeoutHeartbeat time.Duration `json:"sendTimeoutHeartbeat" default:"2s"`
-
-	// RecvTimeoutHeartbeat specifies the minimum amount of time between the
-	// client expecting to receive heartbeat notifications from the server
-	RecvTimeoutHeartbeat time.Duration `json:"recvTimeoutHeartbeat" default:"2s"`
-
-	TLS TLSConfig `json:"tlsConfig"`
-}
-
-type TLSConfig struct {
-	// UseTLS is a flag to enable or disable TLS.
-	UseTLS bool `json:"useTLS" default:"false"`
-
-	// ClientKeyPath is the path to the client key file.
-	ClientKeyPath string `json:"clientKeyPath"`
-
-	// ClientCertPath is the path to the client certificate file.
-	ClientCertPath string `json:"clientCertPath"`
-
-	// CaCertPath is the path to the CA certificate file.
-	CaCertPath string `json:"caCertPath"`
-}
-
-type SourceConfig struct {
-	Config
-	// Queue is the name of the queue to read from.
-	Queue string `json:"queue" validate:"required"`
-
-	// ContentType is the content type of the message.
-	ContentType string `json:"contentType" default:"text/plain"`
-}
-
-type DestinationConfig struct {
-	Config
-
-	// Queue is the name of the queue to write to.
-	Queue string `json:"queue" validate:"required"`
-	// ContentType is the content type of the message.
-	ContentType string `json:"contentType" default:"text/plain"`
-}
 
 type Position struct {
 	MessageID string `json:"message_id"`
