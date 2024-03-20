@@ -108,8 +108,8 @@ func (s *Source) Open(ctx context.Context, sdkPos sdk.Position) (err error) {
 			)
 		}
 
-		sdk.Logger(ctx).Debug().Msg("got queue name from given position")
 		s.config.Queue = pos.Queue
+		sdk.Logger(ctx).Debug().Str("queue", pos.Queue).Msg("got queue name from given position")
 	}
 
 	s.subscription, err = s.conn.Subscribe(s.config.Queue, stomp.AckClientIndividual)
