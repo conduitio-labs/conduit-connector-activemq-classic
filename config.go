@@ -29,6 +29,9 @@ type Config struct {
 	// Password is the password to use when connecting to the broker.
 	Password string `json:"password" validate:"required"`
 
+	// Queue is the name of the queue to write to.
+	Queue string `json:"queue" validate:"required"`
+
 	// SendTimeoutHeartbeat specifies the maximum amount of time between the
 	// client sending heartbeat notifications from the server
 	SendTimeoutHeartbeat time.Duration `json:"sendTimeoutHeartbeat" default:"2s"`
@@ -56,15 +59,11 @@ type TLSConfig struct {
 
 type SourceConfig struct {
 	Config
-	// Queue is the name of the queue to read from.
-	Queue string `json:"queue" validate:"required"`
 }
 
 type DestinationConfig struct {
 	Config
 
-	// Queue is the name of the queue to write to.
-	Queue string `json:"queue" validate:"required"`
 	// ContentType is the content type of the message.
 	ContentType string `json:"contentType" default:"text/plain"`
 }

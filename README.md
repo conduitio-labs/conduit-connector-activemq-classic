@@ -13,7 +13,7 @@ Run `make test` to run all the tests. The command will handle starting and stopp
 
 ## Configuration
 
-Both the source and destination connectors share the same configuration:
+Both the source and destination connectors share these configuration parameters:
 
 | name | description | required | default value |
 | ---- | ----------- | -------- | ------------- |
@@ -27,10 +27,17 @@ Both the source and destination connectors share the same configuration:
 | `tlsConfig.clientKeyPath` | Path to the client key file. | false |  |
 | `tlsConfig.clientCertPath` | Path to the client certificate file. | false |  |
 | `tlsConfig.caCertPath` | Path to the CA certificate file. | false |  |
-| `contentType` | Content type of the message. | false | `text/plain` |
-
 
 (*) Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+
+### Destination configuration
+
+The destination connector accepts an optional `contentType` configuration parameter:
+
+| name | description | required | default value |
+| ---- | ----------- | -------- | ------------- |
+| `contentType` | Content type of the message. | false | `text/plain` |
+
 
 
 Example of a `pipeline.yml` file using `file to activemq classic` and `activemq classic to file` pipelines: 
