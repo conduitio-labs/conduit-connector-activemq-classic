@@ -49,7 +49,8 @@ type Config struct {
 
 func (c Config) logConfig(ctx context.Context, msg string) {
 	sdk.Logger(ctx).Debug().
-		Str("queue", c.URL).
+		Str("url", c.URL).
+		Str("queue", c.Queue).
 		Str("sendTimeoutHeartbeat", c.SendTimeoutHeartbeat.String()).
 		Str("recvTimeoutHeartbeat", c.RecvTimeoutHeartbeat.String()).
 		Bool("tlsEnabled", c.TLS.Enabled).Msg(msg)
