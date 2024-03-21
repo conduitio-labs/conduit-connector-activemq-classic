@@ -4,6 +4,17 @@ The ActiveMQ Classic connector is one of [Conduit](https://conduit.io) plugins. 
 
 It uses the [stomp protocol](https://stomp.github.io/) to connect to ActiveMQ.
 
+## What data does the OpenCDC record consist of?
+
+| Field                   | Description                                                                 |
+|-------------------------|-----------------------------------------------------------------------------|
+| `record.Position`       | json object with the queue name and the messageId frame header.             |
+| `record.Operation`      | currently fixed as "create".                                                |
+| `record.Metadata`       | a string to string map, with keys prefixed as `header-{STOMP_HEADER_NAME}`. |
+| `record.Key`            | the messageId frame header.                                                 |
+| `record.Payload.Before` | <empty>                                                                     |
+| `record.Payload.After`  | the message body                                                            |
+
 ## How to build?
 Run `make build` to build the connector.
 
@@ -27,6 +38,7 @@ Both the source and destination connectors share these configuration parameters:
 | `tls.clientKeyPath` | Path to the client key file. | false |  |
 | `tls.clientCertPath` | Path to the client certificate file. | false |  |
 | `tls.caCertPath` | Path to the CA certificate file. | false |  |
+| `tls.insecureSkipVerify` | Flag to skip verification of the server's certificate chain and host name | false |  |
 
 (*) Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
 
