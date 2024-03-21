@@ -17,7 +17,6 @@ package activemq
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -26,6 +25,7 @@ import (
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/go-stomp/stomp/v3"
 	"github.com/go-stomp/stomp/v3/frame"
+	"github.com/goccy/go-json"
 )
 
 type Source struct {
