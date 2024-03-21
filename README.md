@@ -23,10 +23,10 @@ Both the source and destination connectors share these configuration parameters:
 | `password` | Password to use when connecting to the broker. | true |  |
 | `sendTimeoutHeartbeat` | Specifies the maximum amount of time between the client sending heartbeat notifications from the server. | true | 2s (*) |
 | `recvTimeoutHeartbeat` | Specifies the minimum amount of time between the client expecting to receive heartbeat notifications from the server. | true | 2s (*) |
-| `tlsConfig.useTLS` | Flag to enable or disable TLS. | false | `false` |
-| `tlsConfig.clientKeyPath` | Path to the client key file. | false |  |
-| `tlsConfig.clientCertPath` | Path to the client certificate file. | false |  |
-| `tlsConfig.caCertPath` | Path to the CA certificate file. | false |  |
+| `tls.enabled` | Flag to enable or disable TLS. | false | `false` |
+| `tls.clientKeyPath` | Path to the client key file. | false |  |
+| `tls.clientCertPath` | Path to the client certificate file. | false |  |
+| `tls.caCertPath` | Path to the CA certificate file. | false |  |
 
 (*) Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
 

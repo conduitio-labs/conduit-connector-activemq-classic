@@ -40,12 +40,12 @@ type Config struct {
 	// client expecting to receive heartbeat notifications from the server
 	RecvTimeoutHeartbeat time.Duration `json:"recvTimeoutHeartbeat" default:"2s"`
 
-	TLS TLSConfig `json:"tlsConfig"`
+	TLS TLSConfig `json:"tls"`
 }
 
 type TLSConfig struct {
-	// UseTLS is a flag to enable or disable TLS.
-	UseTLS bool `json:"useTLS" default:"false"`
+	// Enabled is a flag to enable or disable TLS.
+	Enabled bool `json:"enabled" default:"false"`
 
 	// ClientKeyPath is the path to the client key file.
 	ClientKeyPath string `json:"clientKeyPath"`
