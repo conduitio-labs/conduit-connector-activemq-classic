@@ -16,8 +16,7 @@ package activemq
 
 import "time"
 
-//go:generate paramgen -output=paramgen_src.go SourceConfig
-//go:generate paramgen -output=paramgen_dest.go DestinationConfig
+//go:generate paramgen -output=paramgen.go Config
 
 type Config struct {
 	// URL is the URL of the ActiveMQ classic broker.
@@ -55,12 +54,4 @@ type TLSConfig struct {
 
 	// CaCertPath is the path to the CA certificate file.
 	CaCertPath string `json:"caCertPath"`
-}
-
-type SourceConfig struct {
-	Config
-}
-
-type DestinationConfig struct {
-	Config
 }

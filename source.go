@@ -27,7 +27,7 @@ import (
 
 type Source struct {
 	sdk.UnimplementedSource
-	config SourceConfig
+	config Config
 
 	conn         *stomp.Conn
 	subscription *stomp.Subscription
@@ -90,7 +90,7 @@ func (s *Source) Configure(ctx context.Context, cfg map[string]string) error {
 }
 
 func (s *Source) Open(ctx context.Context, sdkPos sdk.Position) (err error) {
-	s.conn, err = connect(ctx, s.config.Config)
+	s.conn, err = connect(ctx, s.config)
 	if err != nil {
 		return fmt.Errorf("failed to dial to ActiveMQ: %w", err)
 	}

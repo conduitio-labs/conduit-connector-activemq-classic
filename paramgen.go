@@ -7,14 +7,8 @@ import (
 	sdk "github.com/conduitio/conduit-connector-sdk"
 )
 
-func (DestinationConfig) Parameters() map[string]sdk.Parameter {
+func (Config) Parameters() map[string]sdk.Parameter {
 	return map[string]sdk.Parameter{
-		"contentType": {
-			Default:     "text/plain",
-			Description: "contentType is the content type of the message.",
-			Type:        sdk.ParameterTypeString,
-			Validations: []sdk.Validation{},
-		},
 		"password": {
 			Default:     "",
 			Description: "password is the password to use when connecting to the broker.",
@@ -39,31 +33,31 @@ func (DestinationConfig) Parameters() map[string]sdk.Parameter {
 		},
 		"sendTimeoutHeartbeat": {
 			Default:     "2s",
-			Description: "sendTimeoutHeartbeat specifies the maximum amount of time between the client sending heartbeat notifications from the server",
+			Description: "sendTimeoutHeartbeat specifies the maximum amount of time between the client sending heartbeat notifications to the server",
 			Type:        sdk.ParameterTypeDuration,
 			Validations: []sdk.Validation{},
 		},
-		"tlsConfig.caCertPath": {
+		"tls.caCertPath": {
 			Default:     "",
 			Description: "caCertPath is the path to the CA certificate file.",
 			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},
-		"tlsConfig.clientCertPath": {
+		"tls.clientCertPath": {
 			Default:     "",
 			Description: "clientCertPath is the path to the client certificate file.",
 			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},
-		"tlsConfig.clientKeyPath": {
+		"tls.clientKeyPath": {
 			Default:     "",
 			Description: "clientKeyPath is the path to the client key file.",
 			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},
-		"tlsConfig.useTLS": {
+		"tls.enabled": {
 			Default:     "false",
-			Description: "useTLS is a flag to enable or disable TLS.",
+			Description: "enabled is a flag to enable or disable TLS.",
 			Type:        sdk.ParameterTypeBool,
 			Validations: []sdk.Validation{},
 		},

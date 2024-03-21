@@ -24,7 +24,7 @@ import (
 
 type Destination struct {
 	sdk.UnimplementedDestination
-	config DestinationConfig
+	config Config
 
 	conn *stomp.Conn
 }
@@ -48,7 +48,7 @@ func (d *Destination) Configure(ctx context.Context, cfg map[string]string) (err
 }
 
 func (d *Destination) Open(ctx context.Context) (err error) {
-	d.conn, err = connect(ctx, d.config.Config)
+	d.conn, err = connect(ctx, d.config)
 	if err != nil {
 		return fmt.Errorf("failed to dial to ActiveMQ: %w", err)
 	}

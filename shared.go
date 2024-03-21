@@ -71,7 +71,7 @@ func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
 func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 	loginOpt := stomp.ConnOpt.Login(config.User, config.Password)
 	heartbeat := stomp.ConnOpt.HeartBeat(config.SendTimeoutHeartbeat, config.RecvTimeoutHeartbeat)
-	if !config.TLS.UseTLS {
+	if !config.TLS.Enabled {
 		conn, err := stomp.Dial("tcp", config.URL, loginOpt, heartbeat)
 		if err != nil {
 			return nil, fmt.Errorf("failed to connect to ActiveMQ: %w", err)
