@@ -171,7 +171,7 @@ func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
 
 	for i := range msg.Header.Len() {
 		k, v := msg.Header.GetAt(i)
-		metadata[k] = v
+		metadata["header-"+k] = v
 	}
 
 	return metadata
