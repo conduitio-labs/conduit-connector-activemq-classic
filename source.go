@@ -82,7 +82,7 @@ func (s *Source) Configure(ctx context.Context, cfg map[string]string) error {
 	if err != nil {
 		return fmt.Errorf("failed to parse config: %w", err)
 	}
-	sdk.Logger(ctx).Debug().Any("config", s.config).Msg("configured source")
+	s.config.logConfig(ctx, "configured destination")
 
 	s.storedMessages = newMessageMap()
 
