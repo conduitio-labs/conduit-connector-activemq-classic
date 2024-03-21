@@ -61,6 +61,12 @@ func (Config) Parameters() map[string]sdk.Parameter {
 			Type:        sdk.ParameterTypeBool,
 			Validations: []sdk.Validation{},
 		},
+		"tls.insecureSkipVerify": {
+			Default:     "false",
+			Description: "insecureSkipVerify is a flag to skip verification of the server's certificate chain and host name.",
+			Type:        sdk.ParameterTypeBool,
+			Validations: []sdk.Validation{},
+		},
 		"url": {
 			Default:     "",
 			Description: "url is the url of the ActiveMQ classic broker.",
