@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 
 	sdk "github.com/conduitio/conduit-connector-sdk"
@@ -171,7 +172,23 @@ func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
 
 	for i := range msg.Header.Len() {
 		k, v := msg.Header.GetAt(i)
-		metadata["header-"+k] = v
+
+		// Prefix to avoid collisions with other metadata keys
+		headerKey := "header-" + k
+
+		// According to the STOMP protocol, headers can have multiple values.
+		if headerVal, ok := metadata[headerKey]; ok {
+			var sb strings.Builder
+			sb.Grow(len(headerVal) + len(v) + 2)
+			sb.WriteString(headerVal)
+			sb.WriteString(", ")
+			sb.WriteString(v)
+
+			metadata[headerKey] = sb.String()
+			continue
+		} else {
+			metadata[headerKey] = v
+		}
 	}
 
 	return metadata
