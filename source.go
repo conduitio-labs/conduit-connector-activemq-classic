@@ -176,7 +176,8 @@ func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
 		// Prefix to avoid collisions with other metadata keys
 		headerKey := "header-" + k
 
-		// According to the STOMP protocol, headers can have multiple values.
+		// According to the STOMP protocol, headers can have multiple values for
+		// the same key. We concatenate them with a comma and a space.
 		if headerVal, ok := metadata[headerKey]; ok {
 			var sb strings.Builder
 			sb.Grow(len(headerVal) + len(v) + 2)
@@ -185,7 +186,6 @@ func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
 			sb.WriteString(v)
 
 			metadata[headerKey] = sb.String()
-			continue
 		} else {
 			metadata[headerKey] = v
 		}

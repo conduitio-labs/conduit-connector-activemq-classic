@@ -60,9 +60,10 @@ func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 		MinVersion: tls.VersionTLS12,
 		MaxVersion: tls.VersionTLS13,
 
-		Certificates:       []tls.Certificate{cert},
-		RootCAs:            caCertPool,
-		InsecureSkipVerify: config.TLS.InsecureSkipVerify,
+		Certificates: []tls.Certificate{cert},
+		RootCAs:      caCertPool,
+
+		InsecureSkipVerify: config.TLS.InsecureSkipVerify, // #nosec G402
 	}
 
 	netConn, err := tls.Dial("tcp", config.URL, tlsConfig)
