@@ -15,11 +15,9 @@
 package activemq
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"crypto/x509"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -27,46 +25,6 @@ import (
 	sdk "github.com/conduitio/conduit-connector-sdk"
 	"github.com/go-stomp/stomp/v3"
 )
-
-type Position struct {
-	MessageID string `json:"message_id"`
-	Queue     string `json:"queue"`
-}
-
-func parseSDKPosition(sdkPos sdk.Position) (Position, error) {
-	decoder := json.NewDecoder(bytes.NewBuffer(sdkPos))
-	decoder.DisallowUnknownFields()
-
-	var p Position
-	if err := decoder.Decode(&p); err != nil {
-		return p, fmt.Errorf("failed to parse position: %w", err)
-	}
-
-	return p, nil
-}
-
-func (p Position) ToSdkPosition() sdk.Position {
-	bs, err := json.Marshal(p)
-	if err != nil {
-		// this should never happen
-		panic(err)
-	}
-
-	return sdk.Position(bs)
-}
-
-// metadataFromMsg extracts all the present headers from a stomp.Message into
-// sdk.Metadata.
-func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
-	metadata := make(sdk.Metadata)
-
-	for i := range msg.Header.Len() {
-		k, v := msg.Header.GetAt(i)
-		metadata[k] = v
-	}
-
-	return metadata
-}
 
 func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 	loginOpt := stomp.ConnOpt.Login(config.User, config.Password)
