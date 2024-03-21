@@ -36,11 +36,6 @@ func TestAcceptance(t *testing.T) {
 			SourceConfig:      cfg,
 			DestinationConfig: cfg,
 			BeforeTest: func(t *testing.T) {
-				// Ideally we would delete the queue before the test to ensure
-				// a clean slate. I don't see a clear way to do this,
-				// so I'll assume that the docker container was started from
-				// scratch.
-
 				cfg["queue"] = uniqueQueueName(t)
 			},
 			Skip: []string{
