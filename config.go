@@ -68,4 +68,8 @@ type TLSConfig struct {
 
 	// CaCertPath is the path to the CA certificate file.
 	CaCertPath string `json:"caCertPath"`
+
+	// InsecureSkipVerify is a flag to skip verification of the server's
+	// certificate chain and host name.
+	InsecureSkipVerify bool `json:"insecureSkipVerify" default:"false"`
 }

@@ -52,13 +52,14 @@ func TestAcceptance(t *testing.T) {
 
 func TestAcceptanceTLS(t *testing.T) {
 	cfg := map[string]string{
-		"url":                      "localhost:61617",
-		"user":                     "admin",
-		"password":                 "admin",
-		"tlsConfig.useTLS":         "true",
-		"tlsConfig.clientKeyPath":  "./test/certs/client_key.pem",
-		"tlsConfig.clientCertPath": "./test/certs/client_cert.pem",
-		"tlsConfig.caCertPath":     "./test/certs/broker.pem",
+		"url":                    "localhost:61617",
+		"user":                   "admin",
+		"password":               "admin",
+		"tls.enabled":            "true",
+		"tls.clientKeyPath":      "./test/certs/client_key.pem",
+		"tls.clientCertPath":     "./test/certs/client_cert.pem",
+		"tls.caCertPath":         "./test/certs/broker.pem",
+		"tls.insecureSkipVerify": "true",
 	}
 
 	driver := sdk.ConfigurableAcceptanceTestDriver{

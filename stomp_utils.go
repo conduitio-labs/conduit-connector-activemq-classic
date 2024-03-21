@@ -60,14 +60,9 @@ func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 		MinVersion: tls.VersionTLS12,
 		MaxVersion: tls.VersionTLS13,
 
-		Certificates: []tls.Certificate{cert},
-		RootCAs:      caCertPool,
-	}
-
-	// version will be overwritten at compile time when building a release,
-	// so this should only be true when running in development mode.
-	if version == "(devel)" {
-		tlsConfig.InsecureSkipVerify = true
+		Certificates:       []tls.Certificate{cert},
+		RootCAs:            caCertPool,
+		InsecureSkipVerify: config.TLS.InsecureSkipVerify,
 	}
 
 	netConn, err := tls.Dial("tcp", config.URL, tlsConfig)
