@@ -36,7 +36,7 @@ func TestMetadataFromMsg(t *testing.T) {
 		Header: header,
 	})
 
-	is.Equal(metadata["header-key"], "value1, value2")
-	is.Equal(metadata["header-key2"], "value3")
-	is.Equal(metadata["header-key3"], "value4")
+	is.Equal(metadata["activemq.header.key"], "value1, value2")
+	is.Equal(metadata["activemq.header.key2"], "value3")
+	is.Equal(metadata["activemq.header.key3"], "value4")
 }

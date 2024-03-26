@@ -174,7 +174,7 @@ func metadataFromMsg(msg *stomp.Message) sdk.Metadata {
 		k, v := msg.Header.GetAt(i)
 
 		// Prefix to avoid collisions with other metadata keys
-		headerKey := "header-" + k
+		headerKey := "activemq.header." + k
 
 		// According to the STOMP protocol, headers can have multiple values for
 		// the same key. We concatenate them with a comma and a space.
