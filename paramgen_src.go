@@ -9,34 +9,58 @@ import (
 
 func (SourceConfig) Parameters() map[string]sdk.Parameter {
 	return map[string]sdk.Parameter{
-		"clientID": {
+		"activemq.dispatchAsync": {
 			Default:     "",
-			Description: "clientID specifies the JMS clientID which is used in combination with the activemq.subcriptionName to denote a durable subscriber.",
-			Type:        sdk.ParameterTypeString,
-			Validations: []sdk.Validation{},
-		},
-		"dispatchAsync": {
-			Default:     "",
-			Description: "dispatchAsync specifies whether messages should be dispatched synchronously or asynchronously from the producer thread for non-durable topics in the broker.",
+			Description: "activemq.dispatchAsync specifies whether messages should be dispatched synchronously or asynchronously from the producer thread for non-durable topics in the broker. Maps to the activemq.dispatchAsync header.",
 			Type:        sdk.ParameterTypeBool,
 			Validations: []sdk.Validation{},
 		},
-		"exclusive": {
+		"activemq.exclusive": {
 			Default:     "",
-			Description: "exclusive indicates the desire to be the sole consumer from the queue.",
+			Description: "activemq.exclusive indicates the desire to be the sole consumer from the queue. Maps to the activemq.exclusive header.",
 			Type:        sdk.ParameterTypeBool,
 			Validations: []sdk.Validation{},
 		},
-		"maximumPendingMessageLimit": {
+		"activemq.maximumPendingMessageLimit": {
 			Default:     "",
-			Description: "maximumPendingMessageLimit specifies the upper limit of pending messages allowed for slow consumers on non-durable topics. When this limit is reached, older messages will be discarded to handle slow consumer backlog.",
+			Description: "activemq.maximumPendingMessageLimit specifies the upper limit of pending messages allowed for slow consumers on non-durable topics. When this limit is reached, older messages will be discarded to handle slow consumer backlog. Maps to the activemq.maximumPendingMessageLimit header.",
 			Type:        sdk.ParameterTypeInt,
 			Validations: []sdk.Validation{},
 		},
-		"noLocal": {
+		"activemq.noLocal": {
 			Default:     "",
-			Description: "noLocal indicates if messages sent from the local connection should be excluded from subscriptions. When set to true, locally sent messages will be ignored.",
+			Description: "activemq.noLocal indicates if messages sent from the local connection should be excluded from subscriptions. When set to true, locally sent messages will be ignored. Maps to the activemq.noLocal header.",
 			Type:        sdk.ParameterTypeBool,
+			Validations: []sdk.Validation{},
+		},
+		"activemq.prefetchSize": {
+			Default:     "",
+			Description: "activemq.prefetchSize determines the maximum number of messages to dispatch to the client before it acknowledges a message. No further messages are dispatched once this limit is hit. For fair message distribution across consumers, consider setting this to a value greater than 1. Maps to the activemq.prefetchSize header.",
+			Type:        sdk.ParameterTypeInt,
+			Validations: []sdk.Validation{},
+		},
+		"activemq.priority": {
+			Default:     "",
+			Description: "activemq.priority specifies the consumer's priority level for weighted dispatching order. Maps to the activemq.priority header.",
+			Type:        sdk.ParameterTypeString,
+			Validations: []sdk.Validation{},
+		},
+		"activemq.retroactive": {
+			Default:     "",
+			Description: "activemq.retroactive, if set to true, makes the subscription retroactive for non-durable topics. Maps to the activemq.retroactive header.",
+			Type:        sdk.ParameterTypeBool,
+			Validations: []sdk.Validation{},
+		},
+		"activemq.subscriptionName": {
+			Default:     "",
+			Description: "activemq.subscriptionName specifies the name used for durable topic subscriptions. Prior to ActiveMQ version 5.7.0, both clientID on the connection and subscriptionName  on the subscribe operation must match. Maps to the activemq.subscriptionName header.",
+			Type:        sdk.ParameterTypeString,
+			Validations: []sdk.Validation{},
+		},
+		"clientID": {
+			Default:     "",
+			Description: "clientID specifies the JMS clientID which is used in combination with the activemq.subcriptionName to denote a durable subscriber. Maps to the client-id header.",
+			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},
 		"password": {
@@ -46,18 +70,6 @@ func (SourceConfig) Parameters() map[string]sdk.Parameter {
 			Validations: []sdk.Validation{
 				sdk.ValidationRequired{},
 			},
-		},
-		"prefetchSize": {
-			Default:     "",
-			Description: "prefetchSize determines the maximum number of messages to dispatch to the client before it acknowledges a message. No further messages are dispatched once this limit is hit. For fair message distribution across consumers, consider setting this to a value greater than 1.",
-			Type:        sdk.ParameterTypeInt,
-			Validations: []sdk.Validation{},
-		},
-		"priority": {
-			Default:     "",
-			Description: "priority specifies the consumer's priority level for weighted dispatching order.",
-			Type:        sdk.ParameterTypeString,
-			Validations: []sdk.Validation{},
 		},
 		"queue": {
 			Default:     "",
@@ -73,15 +85,9 @@ func (SourceConfig) Parameters() map[string]sdk.Parameter {
 			Type:        sdk.ParameterTypeDuration,
 			Validations: []sdk.Validation{},
 		},
-		"retroactive": {
-			Default:     "",
-			Description: "retroactive, if set to true, makes the subscription retroactive for non-durable topics.",
-			Type:        sdk.ParameterTypeBool,
-			Validations: []sdk.Validation{},
-		},
 		"selector": {
 			Default:     "",
-			Description: "selector defines a JMS selector employing SQL 92 syntax as delineated in the JMS 1.1 specification, enabling a filter to be applied on each message associated with the subscription.",
+			Description: "selector defines a JMS selector employing SQL 92 syntax as delineated in the JMS 1.1 specification, enabling a filter to be applied on each message associated with the subscription. Maps to the selector header.",
 			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},
@@ -89,12 +95,6 @@ func (SourceConfig) Parameters() map[string]sdk.Parameter {
 			Default:     "2s",
 			Description: "sendTimeoutHeartbeat specifies the maximum amount of time between the client sending heartbeat notifications to the server",
 			Type:        sdk.ParameterTypeDuration,
-			Validations: []sdk.Validation{},
-		},
-		"subscriptionName": {
-			Default:     "",
-			Description: "subscriptionName specifies the name used for durable topic subscriptions. Prior to ActiveMQ version 5.7.0, both clientID on the connection and subscriptionName  on the subscribe operation must match.",
-			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},
 		"tls.caCertPath": {
