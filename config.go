@@ -21,7 +21,9 @@ import (
 	sdk "github.com/conduitio/conduit-connector-sdk"
 )
 
-//go:generate paramgen -output=paramgen.go Config
+// We generate a paramgen_dest from Config to enforce symmetry with the source configuration, even though there are no extra destination parameters apart from the shared ones.
+
+//go:generate paramgen -output=paramgen_dest.go Config
 
 type Config struct {
 	// URL is the URL of the ActiveMQ classic broker.
