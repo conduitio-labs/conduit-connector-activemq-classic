@@ -157,7 +157,7 @@ func getSubscribeOpts(config SourceConfig) []func(*frame.Frame) error {
 		addHeader("selector", config.Selector)
 	}
 
-	return nil
+	return opts
 }
 
 func (s *Source) Open(ctx context.Context, sdkPos sdk.Position) (err error) {
