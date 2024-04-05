@@ -118,3 +118,11 @@ pipelines:
           sdk.record.format: template
           sdk.record.format.options: '{{ printf "%s" .Payload.After }}'
 ```
+
+
+## NOTES
+
+- The source `activemq.subscriptionName` parameter is only supported for
+  activemq classic v5.0. When using this connector with previous versions of
+  activemq, this parameter will be ignored, as the previous header name for
+  this parameter was `activemq.subcriptionName`.
