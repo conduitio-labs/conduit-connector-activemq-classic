@@ -9,9 +9,9 @@ import (
 
 func (SourceConfig) Parameters() map[string]sdk.Parameter {
 	return map[string]sdk.Parameter{
-		"client_id": {
+		"clientID": {
 			Default:     "",
-			Description: "client_id specifies the JMS clientID which is used in combination with the activemq.subcriptionName to denote a durable subscriber.",
+			Description: "clientID specifies the JMS clientID which is used in combination with the activemq.subcriptionName to denote a durable subscriber.",
 			Type:        sdk.ParameterTypeString,
 			Validations: []sdk.Validation{},
 		},

@@ -35,7 +35,7 @@ type SourceConfig struct {
 
 	// ClientID specifies the JMS clientID which is used in combination with
 	// the activemq.subcriptionName to denote a durable subscriber.
-	ClientID string `json:"client_id"`
+	ClientID string `json:"clientID"`
 
 	// DispatchAsync specifies whether messages should be dispatched
 	// synchronously or asynchronously from the producer thread for non-durable
