@@ -28,6 +28,8 @@ import (
 	cmap "github.com/orcaman/concurrent-map/v2"
 )
 
+//go:generate paramgen -output=paramgen_src.go SourceConfig
+
 type SourceConfig struct {
 	Config
 
