@@ -48,7 +48,7 @@ func (d *Destination) Configure(ctx context.Context, cfg map[string]string) (err
 }
 
 func (d *Destination) Open(ctx context.Context) (err error) {
-	d.conn, err = connect(ctx, d.config)
+	d.conn, err = connectDestination(ctx, d.config)
 	if err != nil {
 		return fmt.Errorf("failed to dial to ActiveMQ: %w", err)
 	}

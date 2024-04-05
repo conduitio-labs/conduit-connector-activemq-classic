@@ -28,9 +28,58 @@ import (
 	cmap "github.com/orcaman/concurrent-map/v2"
 )
 
+type SourceConfig struct {
+	Config
+
+	// ClientID specifies the JMS clientID which is used in combination with
+	// the activemq.subcriptionName to denote a durable subscriber.
+	ClientID string `json:"client_id"`
+
+	// DispatchAsync specifies whether messages should be dispatched
+	// synchronously or asynchronously from the producer thread for non-durable
+	// topics in the broker.
+	DispatchAsync bool `json:"dispatchAsync"`
+
+	// Exclusive indicates the desire to be the sole consumer from the queue.
+	Exclusive bool `json:"exclusive"`
+
+	// MaxPendingMessageLimit specifies the upper limit of pending messages
+	// allowed for slow consumers on non-durable topics. When this limit is
+	// reached, older messages will be discarded to handle slow consumer
+	// backlog.
+	MaxPendingMessageLimit int `json:"maximumPendingMessageLimit"`
+
+	// NoLocal indicates if messages sent from the local connection should be
+	// excluded from subscriptions. When set to true, locally sent messages
+	// will be ignored.
+	NoLocal bool `json:"noLocal"`
+
+	// PrefetchSize determines the maximum number of messages to dispatch to the client
+	// before it acknowledges a message. No further messages are dispatched once this
+	// limit is hit. For fair message distribution across consumers, consider setting
+	// this to a value greater than 1.
+	PrefetchSize int `json:"prefetchSize"`
+
+	// Priority specifies the consumer's priority level for weighted dispatching order.
+	Priority byte `json:"priority"`
+
+	// Retroactive, if set to true, makes the subscription retroactive for non-durable topics.
+	Retroactive bool `json:"retroactive"`
+
+	// SubscriptionName specifies the name used for durable topic subscriptions.
+	// Prior to ActiveMQ version 5.7.0, both clientID on the connection and
+	// subscriptionName  on the subscribe operation must match.
+	SubscriptionName string `json:"subscriptionName"`
+
+	// Selector defines a JMS Selector employing SQL 92 syntax as delineated in
+	// the JMS 1.1 specification, enabling a filter to be applied on each
+	// message associated with the subscription.
+	Selector string `json:"selector"`
+}
+
 type Source struct {
 	sdk.UnimplementedSource
-	config Config
+	config SourceConfig
 
 	conn         *stomp.Conn
 	subscription *stomp.Subscription
@@ -58,8 +107,59 @@ func (s *Source) Configure(ctx context.Context, cfg map[string]string) error {
 	return nil
 }
 
+// getSubscribeOpts gets all configurable STOMP SUBSCRIPTION frame options from SourceConfig.
+// Header names come from here:
+// https://activemq.apache.org/components/classic/documentation/stomp#activemq-classic-extensions-to-stomp
+func getSubscribeOpts(config SourceConfig) []func(*frame.Frame) error {
+	opts := []func(*frame.Frame) error{}
+	addHeader := func(key, value string) {
+		opts = append(opts, stomp.SubscribeOpt.Header(key, value))
+	}
+
+	if config.DispatchAsync {
+		addHeader("activemq.dispatchAsync", "true")
+	}
+
+	if config.Exclusive {
+		addHeader("activemq.exclusive", "true")
+	}
+
+	if config.MaxPendingMessageLimit > 0 {
+		value := fmt.Sprint(config.MaxPendingMessageLimit)
+		addHeader("activemq.maximumPendingMessageLimit", value)
+	}
+
+	if config.NoLocal {
+		addHeader("activemq.noLocal", "true")
+	}
+
+	if config.PrefetchSize > 0 {
+		value := fmt.Sprint(config.PrefetchSize)
+		addHeader("activemq.prefetchSize", value)
+	}
+
+	if config.Priority > 0 {
+		value := fmt.Sprint(config.Priority)
+		addHeader("activemq.priority", value)
+	}
+
+	if config.Retroactive {
+		addHeader("activemq.retroactive", "true")
+	}
+
+	if config.SubscriptionName != "" {
+		addHeader("activemq.subscriptionName", config.SubscriptionName)
+	}
+
+	if config.Selector != "" {
+		addHeader("selector", config.Selector)
+	}
+
+	return nil
+}
+
 func (s *Source) Open(ctx context.Context, sdkPos sdk.Position) (err error) {
-	s.conn, err = connect(ctx, s.config)
+	s.conn, err = connectSource(ctx, s.config)
 	if err != nil {
 		return fmt.Errorf("failed to dial to ActiveMQ: %w", err)
 	}
@@ -81,7 +181,10 @@ func (s *Source) Open(ctx context.Context, sdkPos sdk.Position) (err error) {
 		sdk.Logger(ctx).Debug().Str("queue", pos.Queue).Msg("got queue name from given position")
 	}
 
-	s.subscription, err = s.conn.Subscribe(s.config.Queue, stomp.AckClientIndividual)
+	subscribeOpts := getSubscribeOpts(s.config)
+	s.subscription, err = s.conn.Subscribe(
+		s.config.Queue, stomp.AckClientIndividual,
+		subscribeOpts...)
 	if err != nil {
 		return fmt.Errorf("failed to subscribe to queue: %w", err)
 	}
