@@ -21,10 +21,36 @@ Run `make build` to build the connector.
 ## Testing
 Run `make test` to run all the tests. The command will handle starting and stopping docker containers for you.
 
+## Source configuration
 
-## Configuration
+| name | description | required | default value |
+| ---- | ----------- | -------- | ------------- |
+| `url` | URL of the ActiveMQ classic broker. | true |  |
+| `queue` | Name of the queue to read from or write to. | true |  |
+| `user` | Username to use when connecting to the broker. | true |  |
+| `password` | Password to use when connecting to the broker. | true |  |
+| `sendTimeoutHeartbeat` | Specifies the maximum amount of time between the client sending heartbeat notifications from the server. | true | 2s (*) |
+| `recvTimeoutHeartbeat` | Specifies the minimum amount of time between the client expecting to receive heartbeat notifications from the server. | true | 2s (*) |
+| `tls.enabled` | Flag to enable or disable TLS. | false | `false` |
+| `tls.clientKeyPath` | Path to the client key file. | false |  |
+| `tls.clientCertPath` | Path to the client certificate file. | false |  |
+| `tls.caCertPath` | Path to the CA certificate file. | false |  |
+| `tls.insecureSkipVerify` | Flag to skip verification of the server's certificate chain and host name | false |  |
+| `clientID`                   | Specifies the JMS clientID which is used in combination with the activemq.subscriptionName to denote a durable subscriber. | No       |               |
+| `dispatchAsync`              | Specifies whether messages should be dispatched synchronously or asynchronously from the producer thread for non-durable topics in the broker. | No       | |
+| `exclusive`                  | Indicates the desire to be the sole consumer from the queue.                                    | No       | |
+| `maximumPendingMessageLimit` | Specifies the upper limit of pending messages allowed for slow consumers on non-durable topics. | No       |               |
+| `noLocal`                    | Indicates if messages sent from the local connection should be excluded from subscriptions.    | No       | |
+| `prefetchSize`               | Determines the maximum number of messages to dispatch to the client before it acknowledges a message. | No       |               |
+| `priority`                   | Specifies the consumer's priority level for weighted dispatching order.                        | No       |               |
+| `retroactive`                | If set to true, makes the subscription retroactive for non-durable topics.                      | No       | |
+| `subscriptionName`           | Specifies the name used for durable topic subscriptions.                                        | No       |               |
+| `selector`                   | Defines a JMS Selector employing SQL 92 syntax as delineated in the JMS 1.1 specification, enabling a filter to be applied on each message associated with the subscription. | No |               |
 
-Both the source and destination connectors share these configuration parameters:
+(*) Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
+
+
+## Destination configuration
 
 | name | description | required | default value |
 | ---- | ----------- | -------- | ------------- |
@@ -41,28 +67,6 @@ Both the source and destination connectors share these configuration parameters:
 | `tls.insecureSkipVerify` | Flag to skip verification of the server's certificate chain and host name | false |  |
 
 (*) Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
-
-
-### Source configuration
-
-| name | description | required | default value |
-| ---- | ----------- | -------- | ------------- |
-| `clientID`                   | Specifies the JMS clientID which is used in combination with the activemq.subscriptionName to denote a durable subscriber. | No       |               |
-| `dispatchAsync`              | Specifies whether messages should be dispatched synchronously or asynchronously from the producer thread for non-durable topics in the broker. | No       | |
-| `exclusive`                  | Indicates the desire to be the sole consumer from the queue.                                    | No       | |
-| `maximumPendingMessageLimit` | Specifies the upper limit of pending messages allowed for slow consumers on non-durable topics. | No       |               |
-| `noLocal`                    | Indicates if messages sent from the local connection should be excluded from subscriptions.    | No       | |
-| `prefetchSize`               | Determines the maximum number of messages to dispatch to the client before it acknowledges a message. | No       |               |
-| `priority`                   | Specifies the consumer's priority level for weighted dispatching order.                        | No       |               |
-| `retroactive`                | If set to true, makes the subscription retroactive for non-durable topics.                      | No       | |
-| `subscriptionName`           | Specifies the name used for durable topic subscriptions.                                        | No       |               |
-| `selector`                   | Defines a JMS Selector employing SQL 92 syntax as delineated in the JMS 1.1 specification, enabling a filter to be applied on each message associated with the subscription. | No |               |
-
-
-### Destination configuration
-
-There are no specific destination parameters as of writing.
-
 
 ## Example pipeline.yml file
 
