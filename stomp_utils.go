@@ -31,8 +31,9 @@ func connectSource(ctx context.Context, config SourceConfig) (*stomp.Conn, error
 }
 
 func connectDestination(ctx context.Context, config Config) (*stomp.Conn, error) {
-	// Activemq Classic doesn't specify any client ID in the destination, so it
-	// doesn't need it
+	// According to Activemq Classic docs, the client-id is used in combination
+	// with the activemq.subscriptionName to denote a durable subscriber. Therefore,
+	// it only makes sense to set the client-id when connecting as a source.
 	return connect(ctx, config, "")
 }
 
