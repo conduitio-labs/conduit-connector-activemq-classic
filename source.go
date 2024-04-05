@@ -175,7 +175,7 @@ func (s *Source) Ack(ctx context.Context, position sdk.Position) error {
 		return fmt.Errorf("failed to ack message: %w", err)
 	}
 
-	s.storedMessages.Pop(pos.MessageID)
+	s.storedMessages.Remove(pos.MessageID)
 
 	sdk.Logger(ctx).Trace().Str("queue", s.config.Queue).Msgf("acked message")
 
