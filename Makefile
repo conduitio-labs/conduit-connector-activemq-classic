@@ -15,7 +15,7 @@ install-tools:
 	@go mod tidy
 
 up:
-	docker compose -f test/docker-compose.yml up activemq activemq-tls --quiet-pull -d --wait 
+	docker compose -f test/docker-compose.yml up activemq --quiet-pull -d --wait
 
 up-dev:
 	docker compose -f test/docker-compose.yml up activemq-dev --quiet-pull -d --wait 
