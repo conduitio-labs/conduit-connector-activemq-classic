@@ -26,11 +26,29 @@ import (
 	"github.com/go-stomp/stomp/v3"
 )
 
-func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
-	loginOpt := stomp.ConnOpt.Login(config.User, config.Password)
-	heartbeat := stomp.ConnOpt.HeartBeat(config.SendTimeoutHeartbeat, config.RecvTimeoutHeartbeat)
+func connectSource(ctx context.Context, config SourceConfig) (*stomp.Conn, error) {
+	return connect(ctx, config.Config, config.ClientID)
+}
+
+func connectDestination(ctx context.Context, config Config) (*stomp.Conn, error) {
+	// According to Activemq Classic docs, the client-id is used in combination
+	// with the activemq.subscriptionName to denote a durable subscriber. Therefore,
+	// it only makes sense to set the client-id when connecting as a source.
+	return connect(ctx, config, "")
+}
+
+func connect(ctx context.Context, config Config, clientID string) (*stomp.Conn, error) {
+	connOpts := []func(*stomp.Conn) error{
+		stomp.ConnOpt.Login(config.User, config.Password),
+		stomp.ConnOpt.HeartBeat(config.SendTimeoutHeartbeat, config.RecvTimeoutHeartbeat),
+	}
+	if clientID != "" {
+		opt := stomp.ConnOpt.Header("client-id", clientID)
+		connOpts = append(connOpts, opt)
+	}
+
 	if !config.TLS.Enabled {
-		conn, err := stomp.Dial("tcp", config.URL, loginOpt, heartbeat)
+		conn, err := stomp.Dial("tcp", config.URL, connOpts...)
 		if err != nil {
 			return nil, fmt.Errorf("failed to connect to ActiveMQ: %w", err)
 		}
@@ -72,7 +90,7 @@ func connect(ctx context.Context, config Config) (*stomp.Conn, error) {
 	}
 	sdk.Logger(ctx).Debug().Msg("TLS connection established")
 
-	conn, err := stomp.Connect(netConn, loginOpt, heartbeat)
+	conn, err := stomp.Connect(netConn, connOpts...)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to ActiveMQ: %w", err)
 	}
