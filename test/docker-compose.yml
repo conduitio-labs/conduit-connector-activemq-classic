@@ -2,24 +2,11 @@ version: '3.8'
 
 services:
   activemq:
-    image: apache/activemq-classic
+    image: apache/activemq-classic:6.0.1
     container_name: activemq-classic
+    init: true
     ports:
       - "61613:61613"
-    environment:
-      ACTIVEMQ_CONNECTION_USER: "admin"
-      ACTIVEMQ_CONNECTION_PASSWORD: "admin"
-    healthcheck:
-      test: ["CMD", "curl", "http://localhost:8161"]
-      interval: 5s
-      timeout: 20s
-      retries: 6
-      start_period: 30s
-
-  activemq-tls:
-    image: apache/activemq-classic
-    container_name: activemq-classic-tls
-    ports:
       - "61617:61617"
     environment:
       ACTIVEMQ_CONNECTION_USER: "admin"
@@ -36,22 +23,3 @@ services:
       timeout: 20s
       retries: 6
       start_period: 30s
-
-
-  # for development: starts fast, stops faster
-  activemq-dev:
-    stop_grace_period: 100ms
-    image: apache/activemq-classic
-    container_name: activemq-classic-dev
-    ports:
-      - "61613:61613"
-    environment:
-      ACTIVEMQ_CONNECTION_USER: "admin"
-      ACTIVEMQ_CONNECTION_PASSWORD: "admin"
-    healthcheck:
-      test: ["CMD", "curl", "http://localhost:8161"]
-      interval: 100ms
-      timeout: 20s
-      retries: 100
-      start_period: 100ms
-

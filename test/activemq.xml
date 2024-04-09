@@ -103,6 +103,7 @@
             http://activemq.apache.org/configuring-transports.html
         -->
         <transportConnectors>
+            <transportConnector name="tcp" uri="stomp://0.0.0.0:61613"/>
             <transportConnector name="ssl" uri="stomp+ssl://0.0.0.0:61617"/>
         </transportConnectors>
 
