@@ -24,23 +24,26 @@ import (
 )
 
 func TestAcceptance(t *testing.T) {
-	cfg := map[string]string{
-		"url":      "localhost:61613",
-		"user":     "admin",
-		"password": "admin",
+	sourceCfg := map[string]string{
+		SourceConfigUrl:      "localhost:61613",
+		SourceConfigUser:     "admin",
+		SourceConfigPassword: "admin",
+	}
+	destCfg := map[string]string{
+		DestinationConfigUrl:      "localhost:61613",
+		DestinationConfigUser:     "admin",
+		DestinationConfigPassword: "admin",
 	}
 
 	driver := sdk.ConfigurableAcceptanceTestDriver{
 		Config: sdk.ConfigurableAcceptanceTestDriverConfig{
 			Connector:         Connector,
-			SourceConfig:      cfg,
-			DestinationConfig: cfg,
+			SourceConfig:      sourceCfg,
+			DestinationConfig: destCfg,
 			BeforeTest: func(t *testing.T) {
-				cfg["queue"] = uniqueQueueName(t)
-			},
-			Skip: []string{
-				"TestSource_Configure_RequiredParams",
-				"TestDestination_Configure_RequiredParams",
+				queueName := uniqueQueueName(t)
+				sourceCfg[SourceConfigQueue] = queueName
+				destCfg[DestinationConfigQueue] = queueName
 			},
 			WriteTimeout: 500 * time.Millisecond,
 			ReadTimeout:  500 * time.Millisecond,
@@ -51,28 +54,37 @@ func TestAcceptance(t *testing.T) {
 }
 
 func TestAcceptanceTLS(t *testing.T) {
-	cfg := map[string]string{
-		"url":                    "localhost:61617",
-		"user":                   "admin",
-		"password":               "admin",
-		"tls.enabled":            "true",
-		"tls.clientKeyPath":      "./test/certs/client_key.pem",
-		"tls.clientCertPath":     "./test/certs/client_cert.pem",
-		"tls.caCertPath":         "./test/certs/broker.pem",
-		"tls.insecureSkipVerify": "true",
+	sourceCfg := map[string]string{
+		SourceConfigUrl:                   "localhost:61617",
+		SourceConfigUser:                  "admin",
+		SourceConfigPassword:              "admin",
+		SourceConfigTlsEnabled:            "true",
+		SourceConfigTlsClientKeyPath:      "./test/certs/client_key.pem",
+		SourceConfigTlsClientCertPath:     "./test/certs/client_cert.pem",
+		SourceConfigTlsCaCertPath:         "./test/certs/broker.pem",
+		SourceConfigTlsInsecureSkipVerify: "true",
+	}
+
+	destCfg := map[string]string{
+		DestinationConfigUrl:                   "localhost:61617",
+		DestinationConfigUser:                  "admin",
+		DestinationConfigPassword:              "admin",
+		DestinationConfigTlsEnabled:            "true",
+		DestinationConfigTlsClientKeyPath:      "./test/certs/client_key.pem",
+		DestinationConfigTlsClientCertPath:     "./test/certs/client_cert.pem",
+		DestinationConfigTlsCaCertPath:         "./test/certs/broker.pem",
+		DestinationConfigTlsInsecureSkipVerify: "true",
 	}
 
 	driver := sdk.ConfigurableAcceptanceTestDriver{
 		Config: sdk.ConfigurableAcceptanceTestDriverConfig{
 			Connector:         Connector,
-			SourceConfig:      cfg,
-			DestinationConfig: cfg,
+			SourceConfig:      sourceCfg,
+			DestinationConfig: destCfg,
 			BeforeTest: func(t *testing.T) {
-				cfg["queue"] = uniqueQueueName(t)
-			},
-			Skip: []string{
-				"TestSource_Configure_RequiredParams",
-				"TestDestination_Configure_RequiredParams",
+				queueName := uniqueQueueName(t)
+				sourceCfg[SourceConfigQueue] = queueName
+				destCfg[DestinationConfigQueue] = queueName
 			},
 			WriteTimeout: 500 * time.Millisecond,
 			ReadTimeout:  500 * time.Millisecond,
