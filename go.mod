@@ -1,6 +1,7 @@
 module github.com/conduitio-labs/conduit-connector-activemq-classic
 
-go 1.22.6
+go 1.23.2
+
 require (
 	github.com/conduitio/conduit-commons v0.4.0
 	github.com/conduitio/conduit-connector-sdk v0.11.0
