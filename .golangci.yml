@@ -39,6 +39,7 @@ linters:
     - asciicheck
     - bidichk
     - bodyclose
+    - copyloopvar
     - containedctx
     - contextcheck
     - decorder
@@ -51,9 +52,7 @@ linters:
     - errchkjson
     - errname
     - errorlint
-    - execinquery
     - exhaustive
-    - exportloopref
     # - forbidigo
     - forcetypeassert
     - funlen
