@@ -1,0 +1,349 @@
+version: "1.0"
+specification:
+  name: activemq
+  summary: An ActiveMQ classic source and destination plugin for Conduit, written in Go.
+  description: An ActiveMQ classic source and destination plugin for Conduit, written in Go.
+  version: (devel)
+  author: Meroxa, Inc.
+  source:
+    parameters:
+      - name: password
+        description: Password is the password to use when connecting to the broker.
+        type: string
+        default: ""
+        validations:
+          - type: required
+            value: ""
+      - name: queue
+        description: Queue is the name of the queue to write to.
+        type: string
+        default: ""
+        validations:
+          - type: required
+            value: ""
+      - name: url
+        description: URL is the URL of the ActiveMQ classic broker.
+        type: string
+        default: ""
+        validations:
+          - type: required
+            value: ""
+      - name: user
+        description: User is the username to use when connecting to the broker.
+        type: string
+        default: ""
+        validations:
+          - type: required
+            value: ""
+      - name: activemq.dispatchAsync
+        description: |-
+          DispatchAsync specifies whether messages should be dispatched
+          synchronously or asynchronously from the producer thread for non-durable
+          topics in the broker.
+          Maps to the activemq.dispatchAsync header.
+        type: bool
+        default: ""
+        validations: []
+      - name: activemq.exclusive
+        description: |-
+          Exclusive indicates the desire to be the sole consumer from the queue.
+          Maps to the activemq.exclusive header.
+        type: bool
+        default: ""
+        validations: []
+      - name: activemq.maximumPendingMessageLimit
+        description: |-
+          MaxPendingMessageLimit specifies the upper limit of pending messages
+          allowed for slow consumers on non-durable topics. When this limit is
+          reached, older messages will be discarded to handle slow consumer
+          backlog.
+          Maps to the activemq.maximumPendingMessageLimit header.
+        type: int
+        default: ""
+        validations: []
+      - name: activemq.noLocal
+        description: |-
+          NoLocal indicates if messages sent from the local connection should be
+          excluded from subscriptions. When set to true, locally sent messages
+          will be ignored.
+          Maps to the activemq.noLocal header.
+        type: bool
+        default: ""
+        validations: []
+      - name: activemq.prefetchSize
+        description: |-
+          PrefetchSize determines the maximum number of messages to dispatch to the client
+          before it acknowledges a message. No further messages are dispatched once this
+          limit is hit. For fair message distribution across consumers, consider setting
+          this to a value greater than 1.
+          Maps to the activemq.prefetchSize header.
+        type: int
+        default: ""
+        validations: []
+      - name: activemq.priority
+        description: |-
+          Priority specifies the consumer's priority level for weighted dispatching order.
+          Maps to the activemq.priority header.
+        type: string
+        default: ""
+        validations: []
+      - name: activemq.retroactive
+        description: |-
+          Retroactive, if set to true, makes the subscription retroactive for non-durable topics.
+          Maps to the activemq.retroactive header.
+        type: bool
+        default: ""
+        validations: []
+      - name: activemq.subscriptionName
+        description: |-
+          SubscriptionName specifies the name used for durable topic subscriptions.
+          Prior to ActiveMQ version 5.7.0, both clientID on the connection and
+          subscriptionName  on the subscribe operation must match.
+          Maps to the activemq.subscriptionName header.
+        type: string
+        default: ""
+        validations: []
+      - name: clientID
+        description: |-
+          ClientID specifies the JMS clientID which is used in combination with
+          the activemq.subcriptionName to denote a durable subscriber.
+          Maps to the client-id header.
+        type: string
+        default: ""
+        validations: []
+      - name: recvTimeoutHeartbeat
+        description: |-
+          RecvTimeoutHeartbeat specifies the minimum amount of time between the
+          client expecting to receive heartbeat notifications from the server
+        type: duration
+        default: 2s
+        validations: []
+      - name: selector
+        description: |-
+          Selector defines a JMS Selector employing SQL 92 syntax as delineated in
+          the JMS 1.1 specification, enabling a filter to be applied on each
+          message associated with the subscription.
+          Maps to the selector header.
+        type: string
+        default: ""
+        validations: []
+      - name: sendTimeoutHeartbeat
+        description: |-
+          SendTimeoutHeartbeat specifies the maximum amount of time between the
+          client sending heartbeat notifications to the server
+        type: duration
+        default: 2s
+        validations: []
+      - name: tls.caCertPath
+        description: CaCertPath is the path to the CA certificate file.
+        type: string
+        default: ""
+        validations: []
+      - name: tls.clientCertPath
+        description: ClientCertPath is the path to the client certificate file.
+        type: string
+        default: ""
+        validations: []
+      - name: tls.clientKeyPath
+        description: ClientKeyPath is the path to the client key file.
+        type: string
+        default: ""
+        validations: []
+      - name: tls.enabled
+        description: Enabled is a flag to enable or disable TLS.
+        type: bool
+        default: "false"
+        validations: []
+      - name: tls.insecureSkipVerify
+        description: |-
+          InsecureSkipVerify is a flag to skip verification of the server's
+          certificate chain and host name.
+        type: bool
+        default: "false"
+        validations: []
+      - name: sdk.batch.delay
+        description: Maximum delay before an incomplete batch is read from the source.
+        type: duration
+        default: "0"
+        validations: []
+      - name: sdk.batch.size
+        description: Maximum size of batch before it gets read from the source.
+        type: int
+        default: "0"
+        validations:
+          - type: greater-than
+            value: "-1"
+      - name: sdk.schema.context.enabled
+        description: |-
+          Specifies whether to use a schema context name. If set to false, no schema context name will
+          be used, and schemas will be saved with the subject name specified in the connector
+          (not safe because of name conflicts).
+        type: bool
+        default: "true"
+        validations: []
+      - name: sdk.schema.context.name
+        description: |-
+          Schema context name to be used. Used as a prefix for all schema subject names.
+          If empty, defaults to the connector ID.
+        type: string
+        default: ""
+        validations: []
+      - name: sdk.schema.extract.key.enabled
+        description: Whether to extract and encode the record key with a schema.
+        type: bool
+        default: "true"
+        validations: []
+      - name: sdk.schema.extract.key.subject
+        description: |-
+          The subject of the key schema. If the record metadata contains the field
+          "opencdc.collection" it is prepended to the subject name and separated
+          with a dot.
+        type: string
+        default: key
+        validations: []
+      - name: sdk.schema.extract.payload.enabled
+        description: Whether to extract and encode the record payload with a schema.
+        type: bool
+        default: "true"
+        validations: []
+      - name: sdk.schema.extract.payload.subject
+        description: |-
+          The subject of the payload schema. If the record metadata contains the
+          field "opencdc.collection" it is prepended to the subject name and
+          separated with a dot.
+        type: string
+        default: payload
+        validations: []
+      - name: sdk.schema.extract.type
+        description: The type of the payload schema.
+        type: string
+        default: avro
+        validations:
+          - type: inclusion
+            value: avro
+  destination:
+    parameters:
+      - name: password
+        description: Password is the password to use when connecting to the broker.
+        type: string
+        default: ""
+        validations:
+          - type: required
+            value: ""
+      - name: queue
+        description: Queue is the name of the queue to write to.
+        type: string
+        default: ""
+        validations:
+          - type: required
+            value: ""
+      - name: url
+        description: URL is the URL of the ActiveMQ classic broker.
+        type: string
+        default: ""
+        validations:
+          - type: required
+            value: ""
+      - name: user
+        description: User is the username to use when connecting to the broker.
+        type: string
+        default: ""
+        validations:
+          - type: required
+            value: ""
+      - name: recvTimeoutHeartbeat
+        description: |-
+          RecvTimeoutHeartbeat specifies the minimum amount of time between the
+          client expecting to receive heartbeat notifications from the server
+        type: duration
+        default: 2s
+        validations: []
+      - name: sendTimeoutHeartbeat
+        description: |-
+          SendTimeoutHeartbeat specifies the maximum amount of time between the
+          client sending heartbeat notifications to the server
+        type: duration
+        default: 2s
+        validations: []
+      - name: tls.caCertPath
+        description: CaCertPath is the path to the CA certificate file.
+        type: string
+        default: ""
+        validations: []
+      - name: tls.clientCertPath
+        description: ClientCertPath is the path to the client certificate file.
+        type: string
+        default: ""
+        validations: []
+      - name: tls.clientKeyPath
+        description: ClientKeyPath is the path to the client key file.
+        type: string
+        default: ""
+        validations: []
+      - name: tls.enabled
+        description: Enabled is a flag to enable or disable TLS.
+        type: bool
+        default: "false"
+        validations: []
+      - name: tls.insecureSkipVerify
+        description: |-
+          InsecureSkipVerify is a flag to skip verification of the server's
+          certificate chain and host name.
+        type: bool
+        default: "false"
+        validations: []
+      - name: sdk.batch.delay
+        description: Maximum delay before an incomplete batch is written to the destination.
+        type: duration
+        default: "0"
+        validations: []
+      - name: sdk.batch.size
+        description: Maximum size of batch before it gets written to the destination.
+        type: int
+        default: "0"
+        validations:
+          - type: greater-than
+            value: "-1"
+      - name: sdk.rate.burst
+        description: |-
+          Allow bursts of at most X records (0 or less means that bursts are not
+          limited). Only takes effect if a rate limit per second is set. Note that
+          if `sdk.batch.size` is bigger than `sdk.rate.burst`, the effective batch
+          size will be equal to `sdk.rate.burst`.
+        type: int
+        default: "0"
+        validations:
+          - type: greater-than
+            value: "-1"
+      - name: sdk.rate.perSecond
+        description: Maximum number of records written per second (0 means no rate limit).
+        type: float
+        default: "0"
+        validations:
+          - type: greater-than
+            value: "-1"
+      - name: sdk.record.format
+        description: |-
+          The format of the output record. See the Conduit documentation for a full
+          list of supported formats (https://conduit.io/docs/using/connectors/configuration-parameters/output-format).
+        type: string
+        default: opencdc/json
+        validations: []
+      - name: sdk.record.format.options
+        description: |-
+          Options to configure the chosen output record format. Options are normally
+          key=value pairs separated with comma (e.g. opt1=val2,opt2=val2), except
+          for the `template` record format, where options are a Go template.
+        type: string
+        default: ""
+        validations: []
+      - name: sdk.schema.extract.key.enabled
+        description: Whether to extract and decode the record key with a schema.
+        type: bool
+        default: "true"
+        validations: []
+      - name: sdk.schema.extract.payload.enabled
+        description: Whether to extract and decode the record payload with a schema.
+        type: bool
+        default: "true"
+        validations: []
