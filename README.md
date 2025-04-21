@@ -35,114 +35,111 @@ pipelines:
       - id: example
         plugin: "activemq"
         settings:
-          # Password is the password to use when connecting to the broker.
+          # The password to use when connecting to the broker.
           # Type: string
           # Required: yes
           password: ""
-          # Queue is the name of the queue to write to.
+          # The name of the queue to write to.
           # Type: string
           # Required: yes
           queue: ""
-          # URL is the URL of the ActiveMQ classic broker.
+          # The URL of the ActiveMQ classic broker.
           # Type: string
           # Required: yes
           url: ""
-          # User is the username to use when connecting to the broker.
+          # The username to use when connecting to the broker.
           # Type: string
           # Required: yes
           user: ""
-          # DispatchAsync specifies whether messages should be dispatched
-          # synchronously or asynchronously from the producer thread for
-          # non-durable topics in the broker. Maps to the activemq.dispatchAsync
-          # header.
+          # Whether messages should be dispatched synchronously or
+          # asynchronously from the producer thread for non-durable topics in
+          # the broker. Maps to the activemq.dispatchAsync header.
           # Type: bool
           # Required: no
           activemq.dispatchAsync: "false"
-          # Exclusive indicates the desire to be the sole consumer from the
-          # queue. Maps to the activemq.exclusive header.
+          # Whether the desire to be the sole consumer from the queue. Maps to
+          # the activemq.exclusive header.
           # Type: bool
           # Required: no
           activemq.exclusive: "false"
-          # MaxPendingMessageLimit specifies the upper limit of pending messages
-          # allowed for slow consumers on non-durable topics. When this limit is
-          # reached, older messages will be discarded to handle slow consumer
-          # backlog. Maps to the activemq.maximumPendingMessageLimit header.
+          # The upper limit of pending messages allowed for slow consumers on
+          # non-durable topics. When this limit is reached, older messages will
+          # be discarded to handle slow consumer backlog. Maps to the
+          # activemq.maximumPendingMessageLimit header.
           # Type: int
           # Required: no
           activemq.maximumPendingMessageLimit: "0"
-          # NoLocal indicates if messages sent from the local connection should
-          # be excluded from subscriptions. When set to true, locally sent
-          # messages will be ignored. Maps to the activemq.noLocal header.
+          # Whether messages sent from the local connection should be excluded
+          # from subscriptions. When set to true, locally sent messages will be
+          # ignored. Maps to the activemq.noLocal header.
           # Type: bool
           # Required: no
           activemq.noLocal: "false"
-          # PrefetchSize determines the maximum number of messages to dispatch
-          # to the client before it acknowledges a message. No further messages
-          # are dispatched once this limit is hit. For fair message distribution
-          # across consumers, consider setting this to a value greater than 1.
-          # Maps to the activemq.prefetchSize header.
+          # The maximum number of messages to dispatch to the client before it
+          # acknowledges a message. No further messages are dispatched once this
+          # limit is hit. For fair message distribution across consumers,
+          # consider setting this to a value greater than 1. Maps to the
+          # activemq.prefetchSize header.
           # Type: int
           # Required: no
           activemq.prefetchSize: "0"
-          # Priority specifies the consumer's priority level for weighted
-          # dispatching order. Maps to the activemq.priority header.
+          # The consumer's priority level for weighted dispatching order. Maps
+          # to the activemq.priority header.
           # Type: string
           # Required: no
           activemq.priority: ""
-          # Retroactive, if set to true, makes the subscription retroactive for
-          # non-durable topics. Maps to the activemq.retroactive header.
+          # Whether the subscription is retroactive for non-durable topics. Maps
+          # to the activemq.retroactive header.
           # Type: bool
           # Required: no
           activemq.retroactive: "false"
-          # SubscriptionName specifies the name used for durable topic
-          # subscriptions. Prior to ActiveMQ version 5.7.0, both clientID on the
-          # connection and subscriptionName on the subscribe operation must
-          # match. Maps to the activemq.subscriptionName header.
+          # The name used for durable topic subscriptions. Prior to ActiveMQ
+          # version 5.7.0, both clientID on the connection and subscriptionName
+          # on the subscribe operation must match. Maps to the
+          # activemq.subscriptionName header.
           # Type: string
           # Required: no
           activemq.subscriptionName: ""
-          # ClientID specifies the JMS clientID which is used in combination
-          # with the activemq.subcriptionName to denote a durable subscriber.
-          # Maps to the client-id header.
+          # The JMS clientID which is used in combination with the
+          # activemq.subcriptionName to denote a durable subscriber. Maps to the
+          # client-id header.
           # Type: string
           # Required: no
           clientID: ""
-          # RecvTimeoutHeartbeat specifies the minimum amount of time between
-          # the client expecting to receive heartbeat notifications from the
-          # server
+          # The minimum amount of time between the client expecting to receive
+          # heartbeat notifications from the server
           # Type: duration
           # Required: no
           recvTimeoutHeartbeat: "2s"
-          # Selector defines a JMS Selector employing SQL 92 syntax as
-          # delineated in the JMS 1.1 specification, enabling a filter to be
-          # applied on each message associated with the subscription. Maps to
-          # the selector header.
+          # A JMS Selector employing SQL 92 syntax as delineated in the JMS 1.1
+          # specification, enabling a filter to be applied on each message
+          # associated with the subscription. Maps to the selector header.
           # Type: string
           # Required: no
           selector: ""
-          # SendTimeoutHeartbeat specifies the maximum amount of time between
-          # the client sending heartbeat notifications to the server
+          # The maximum amount of time between the client sending heartbeat
+          # notifications to the server
           # Type: duration
           # Required: no
           sendTimeoutHeartbeat: "2s"
-          # CaCertPath is the path to the CA certificate file.
+          # The path to the CA certificate file.
           # Type: string
           # Required: no
           tls.caCertPath: ""
-          # ClientCertPath is the path to the client certificate file.
+          # The path to the client certificate file.
           # Type: string
           # Required: no
           tls.clientCertPath: ""
-          # ClientKeyPath is the path to the client key file.
+          # The path to the client key file.
           # Type: string
           # Required: no
           tls.clientKeyPath: ""
-          # Enabled is a flag to enable or disable TLS.
+          # Flag to enable or disable TLS.
           # Type: bool
           # Required: no
           tls.enabled: "false"
-          # InsecureSkipVerify is a flag to skip verification of the server's
-          # certificate chain and host name.
+          # Flag to skip verification of the server's certificate chain and host
+          # name.
           # Type: bool
           # Required: no
           tls.insecureSkipVerify: "false"
@@ -205,51 +202,50 @@ pipelines:
       - id: example
         plugin: "activemq"
         settings:
-          # Password is the password to use when connecting to the broker.
+          # The password to use when connecting to the broker.
           # Type: string
           # Required: yes
           password: ""
-          # Queue is the name of the queue to write to.
+          # The name of the queue to write to.
           # Type: string
           # Required: yes
           queue: ""
-          # URL is the URL of the ActiveMQ classic broker.
+          # The URL of the ActiveMQ classic broker.
           # Type: string
           # Required: yes
           url: ""
-          # User is the username to use when connecting to the broker.
+          # The username to use when connecting to the broker.
           # Type: string
           # Required: yes
           user: ""
-          # RecvTimeoutHeartbeat specifies the minimum amount of time between
-          # the client expecting to receive heartbeat notifications from the
-          # server
+          # The minimum amount of time between the client expecting to receive
+          # heartbeat notifications from the server
           # Type: duration
           # Required: no
           recvTimeoutHeartbeat: "2s"
-          # SendTimeoutHeartbeat specifies the maximum amount of time between
-          # the client sending heartbeat notifications to the server
+          # The maximum amount of time between the client sending heartbeat
+          # notifications to the server
           # Type: duration
           # Required: no
           sendTimeoutHeartbeat: "2s"
-          # CaCertPath is the path to the CA certificate file.
+          # The path to the CA certificate file.
           # Type: string
           # Required: no
           tls.caCertPath: ""
-          # ClientCertPath is the path to the client certificate file.
+          # The path to the client certificate file.
           # Type: string
           # Required: no
           tls.clientCertPath: ""
-          # ClientKeyPath is the path to the client key file.
+          # The path to the client key file.
           # Type: string
           # Required: no
           tls.clientKeyPath: ""
-          # Enabled is a flag to enable or disable TLS.
+          # Flag to enable or disable TLS.
           # Type: bool
           # Required: no
           tls.enabled: "false"
-          # InsecureSkipVerify is a flag to skip verification of the server's
-          # certificate chain and host name.
+          # Flag to skip verification of the server's certificate chain and host
+          # name.
           # Type: bool
           # Required: no
           tls.insecureSkipVerify: "false"
