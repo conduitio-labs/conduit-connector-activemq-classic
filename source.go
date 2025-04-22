@@ -34,58 +34,52 @@ type SourceConfig struct {
 
 	Config
 
-	// ClientID specifies the JMS clientID which is used in combination with
+	// The JMS clientID which is used in combination with
 	// the activemq.subcriptionName to denote a durable subscriber.
 	// Maps to the client-id header.
 	ClientID string `json:"clientID"`
 
-	// DispatchAsync specifies whether messages should be dispatched
-	// synchronously or asynchronously from the producer thread for non-durable
-	// topics in the broker.
+	// Whether messages should be dispatched synchronously or asynchronously
+	// from the producer thread for non-durable topics in the broker.
 	// Maps to the activemq.dispatchAsync header.
 	DispatchAsync bool `json:"activemq.dispatchAsync"`
 
-	// Exclusive indicates the desire to be the sole consumer from the queue.
+	// Whether the desire to be the sole consumer from the queue.
 	// Maps to the activemq.exclusive header.
 	Exclusive bool `json:"activemq.exclusive"`
 
-	// MaxPendingMessageLimit specifies the upper limit of pending messages
-	// allowed for slow consumers on non-durable topics. When this limit is
-	// reached, older messages will be discarded to handle slow consumer
-	// backlog.
+	// The upper limit of pending messages allowed for slow consumers on non-durable topics.
+	// When this limit is reached, older messages will be discarded to handle slow consumer backlog.
 	// Maps to the activemq.maximumPendingMessageLimit header.
 	MaxPendingMessageLimit int `json:"activemq.maximumPendingMessageLimit"`
 
-	// NoLocal indicates if messages sent from the local connection should be
-	// excluded from subscriptions. When set to true, locally sent messages
-	// will be ignored.
+	// Whether messages sent from the local connection should be excluded from subscriptions.
+	// When set to true, locally sent messages will be ignored.
 	// Maps to the activemq.noLocal header.
 	NoLocal bool `json:"activemq.noLocal"`
 
-	// PrefetchSize determines the maximum number of messages to dispatch to the client
-	// before it acknowledges a message. No further messages are dispatched once this
-	// limit is hit. For fair message distribution across consumers, consider setting
-	// this to a value greater than 1.
+	// The maximum number of messages to dispatch to the client before it acknowledges a message.
+	// No further messages are dispatched once this limit is hit.
+	// For fair message distribution across consumers, consider setting this to a value greater than 1.
 	// Maps to the activemq.prefetchSize header.
 	PrefetchSize int `json:"activemq.prefetchSize"`
 
-	// Priority specifies the consumer's priority level for weighted dispatching order.
+	// The consumer's priority level for weighted dispatching order.
 	// Maps to the activemq.priority header.
 	Priority byte `json:"activemq.priority"`
 
-	// Retroactive, if set to true, makes the subscription retroactive for non-durable topics.
+	// Whether the subscription is retroactive for non-durable topics.
 	// Maps to the activemq.retroactive header.
 	Retroactive bool `json:"activemq.retroactive"`
 
-	// SubscriptionName specifies the name used for durable topic subscriptions.
+	// The name used for durable topic subscriptions.
 	// Prior to ActiveMQ version 5.7.0, both clientID on the connection and
-	// subscriptionName  on the subscribe operation must match.
+	// subscriptionName on the subscribe operation must match.
 	// Maps to the activemq.subscriptionName header.
 	SubscriptionName string `json:"activemq.subscriptionName"`
 
-	// Selector defines a JMS Selector employing SQL 92 syntax as delineated in
-	// the JMS 1.1 specification, enabling a filter to be applied on each
-	// message associated with the subscription.
+	// A JMS Selector employing SQL 92 syntax as delineated in the JMS 1.1 specification,
+	// enabling a filter to be applied on each message associated with the subscription.
 	// Maps to the selector header.
 	Selector string `json:"selector"`
 }

@@ -19,43 +19,40 @@ import (
 )
 
 type Config struct {
-	// URL is the URL of the ActiveMQ classic broker.
+	// The URL of the ActiveMQ classic broker.
 	URL string `json:"url" validate:"required"`
 
-	// User is the username to use when connecting to the broker.
+	// The username to use when connecting to the broker.
 	User string `json:"user" validate:"required"`
 
-	// Password is the password to use when connecting to the broker.
+	// The password to use when connecting to the broker.
 	Password string `json:"password" validate:"required"`
 
-	// Queue is the name of the queue to write to.
+	// The name of the queue to write to.
 	Queue string `json:"queue" validate:"required"`
 
-	// SendTimeoutHeartbeat specifies the maximum amount of time between the
-	// client sending heartbeat notifications to the server
+	// The maximum amount of time between the client sending heartbeat notifications to the server
 	SendTimeoutHeartbeat time.Duration `json:"sendTimeoutHeartbeat" default:"2s"`
 
-	// RecvTimeoutHeartbeat specifies the minimum amount of time between the
-	// client expecting to receive heartbeat notifications from the server
+	// The minimum amount of time between the client expecting to receive heartbeat notifications from the server
 	RecvTimeoutHeartbeat time.Duration `json:"recvTimeoutHeartbeat" default:"2s"`
 
 	TLS TLSConfig `json:"tls"`
 }
 
 type TLSConfig struct {
-	// Enabled is a flag to enable or disable TLS.
+	// Flag to enable or disable TLS.
 	Enabled bool `json:"enabled" default:"false"`
 
-	// ClientKeyPath is the path to the client key file.
+	// The path to the client key file.
 	ClientKeyPath string `json:"clientKeyPath"`
 
-	// ClientCertPath is the path to the client certificate file.
+	// The path to the client certificate file.
 	ClientCertPath string `json:"clientCertPath"`
 
-	// CaCertPath is the path to the CA certificate file.
+	// The path to the CA certificate file.
 	CaCertPath string `json:"caCertPath"`
 
-	// InsecureSkipVerify is a flag to skip verification of the server's
-	// certificate chain and host name.
+	// Flag to skip verification of the server's certificate chain and host name.
 	InsecureSkipVerify bool `json:"insecureSkipVerify" default:"false"`
 }
