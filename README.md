@@ -4,6 +4,18 @@ The ActiveMQ Classic connector is one of [Conduit](https://conduit.io) plugins. 
 
 It uses the [stomp protocol](https://stomp.github.io/) to connect to ActiveMQ.
 
+## Migrating from the `activemq` plugin name
+
+The plugin name is `activemq-classic`. Builds from commits before this change report `activemq` (there is no
+tagged release yet, so anyone running it built it from source). That is the same
+name as the [ActiveMQ Artemis connector](https://github.com/conduitio-labs/conduit-connector-activemq-artemis),
+so with both installed, `standalone:activemq` could resolve to the wrong connector.
+
+If a pipeline uses this connector as `plugin: standalone:activemq` (or `activemq`, optionally with `@<version>`),
+change it to `plugin: standalone:activemq-classic` when you upgrade. Settings and the record format are
+unchanged. A pipeline that keeps the old name either fails to start because no plugin has that name, or, with the
+Artemis connector installed, starts that connector instead. Change the name before you upgrade.
+
 ## What data does the OpenCDC record consist of?
 
 | Field                   | Description                                                                          |
@@ -33,7 +45,7 @@ pipelines:
     status: running
     connectors:
       - id: example
-        plugin: "activemq"
+        plugin: "activemq-classic"
         settings:
           # The password to use when connecting to the broker.
           # Type: string
@@ -200,7 +212,7 @@ pipelines:
     status: running
     connectors:
       - id: example
-        plugin: "activemq"
+        plugin: "activemq-classic"
         settings:
           # The password to use when connecting to the broker.
           # Type: string

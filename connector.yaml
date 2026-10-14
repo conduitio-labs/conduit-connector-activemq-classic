@@ -1,6 +1,6 @@
 version: "1.0"
 specification:
-  name: activemq
+  name: activemq-classic
   summary: An ActiveMQ classic source and destination plugin for Conduit, written in Go.
   description: An ActiveMQ classic source and destination plugin for Conduit, written in Go.
   version: (devel)
